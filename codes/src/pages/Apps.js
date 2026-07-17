@@ -5,7 +5,7 @@ import ImageCarousel from '../components/ImageCarousel';
 import { appAPI } from '../api';
 
 // Get API Base URL
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://akagerainc-9vkh.onrender.com/api';
 const UPLOADS_URL = API_BASE_URL.replace('/api', '');
 
 // Helper function to build image URL

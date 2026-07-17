@@ -4,7 +4,7 @@ import axios from 'axios';
 import GoogleAuthButton from '../components/GoogleAuthButton';
 import './Payment.css';
 
-const API = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+const API = process.env.REACT_APP_API_URL || 'https://akagerainc-9vkh.onrender.com/api';
 
 const currencyRates = {
   USD: 1,

@@ -151,7 +151,7 @@ const ImageCarousel = ({ images = EMPTY_IMAGES, autoSlide = true, interval = 500
 
   // Fetch images from database on mount
   useEffect(() => {
-    const API_BASE_URL = (process.env.REACT_APP_API_URL || 'http://localhost:8000/api').replace(/\/$/, '');
+    const API_BASE_URL = (process.env.REACT_APP_API_URL || 'https://akagerainc-9vkh.onrender.com/api').replace(/\/$/, '');
     const buildImageUrl = (imagePath) => {
       if (!imagePath) return null;
       if (/^https?:\/\//.test(imagePath)) return imagePath;
