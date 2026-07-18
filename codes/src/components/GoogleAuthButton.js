@@ -19,7 +19,7 @@ function GoogleAuthButton({ onLogin }) {
       const token = await user.getIdToken();
 
       // Send token to backend for verification
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8000/api'}/auth/google`, {
+      const response = await fetch(`${'https://akagerainc.store/api' || 'http://localhost:8000/api'}/auth/google`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
