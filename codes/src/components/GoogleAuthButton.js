@@ -19,7 +19,8 @@ function GoogleAuthButton({ onLogin }) {
       const token = await user.getIdToken();
 
       // Send token to backend for verification
-      const response = await fetch(`${'https://akagerainc.store/api' || 'http://localhost:8000/api'}/auth/google`, {
+      const apiBaseUrl = process.env.REACT_APP_API_URL || 'https://akagerainc-9vkh.onrender.com/api';
+      const response = await fetch(`${apiBaseUrl}/auth/google`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -32,9 +33,20 @@ function GoogleAuthButton({ onLogin }) {
         }),
       });
 
-      const data = await response.json();
+      const contentType = response.headers.get('content-type') || '';
+      const responseText = await response.text();
+      let data = {};
 
-      if (response.ok) {
+      if (contentType.includes('application/json')) {
+        try {
+          data = responseText ? JSON.parse(responseText) : {};
+        } catch (parseError) {
+          console.error('Google auth JSON parse error:', parseError);
+          data = {};
+        }
+      }
+
+      if (response.ok && data.access_token) {
         localStorage.setItem("access_token", data.access_token);
         localStorage.setItem("user", JSON.stringify(data.user));
         
@@ -42,7 +54,8 @@ function GoogleAuthButton({ onLogin }) {
           onLogin(data.user);
         }
       } else {
-        setError(data.detail || "Login failed. Please try again.");
+        const detail = data?.detail || data?.message || responseText || "Login failed. Please try again.";
+        setError(detail);
       }
     } catch (err) {
       console.error("Google login error:", err);
