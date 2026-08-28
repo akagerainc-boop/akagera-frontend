@@ -45,6 +45,9 @@ export const authAPI = {
   updateProfile: (b) => api.patch('/auth/profile', b),
   changePassword: (b) => api.post('/auth/change-password', b),
   deleteAccount: () => api.delete('/auth/account'),
+  otpRequest: (email, purpose = 'login') => api.post('/auth/otp/request', { email, purpose }),
+  otpVerify: (b) => api.post('/auth/otp/verify', b),
+  passwordReset: (b) => api.post('/auth/password/reset', b),
 };
 
 // ---------------- public content ----------------

@@ -47,6 +47,18 @@ export function AuthProvider({ children }) {
     return data.user;
   }, [persist]);
 
+  const otpLogin = useCallback(async (email, code, name) => {
+    const { data } = await authAPI.otpVerify({ email, code, purpose: 'login', name });
+    persist(data.access_token, data.user);
+    return data.user;
+  }, [persist]);
+
+  const finishPasswordReset = useCallback(async (reset_token, new_password) => {
+    const { data } = await authAPI.passwordReset({ reset_token, new_password });
+    persist(data.access_token, data.user);
+    return data.user;
+  }, [persist]);
+
   const googleLogin = useCallback(async () => {
     const result = await signInWithPopup(auth, googleProvider);
     const fbUser = result.user;
@@ -70,7 +82,7 @@ export function AuthProvider({ children }) {
     } catch { /* ignore */ }
   }, []);
 
-  const value = { user, ready, login, register, googleLogin, logout, refresh, setUser, errText };
+  const value = { user, ready, login, register, googleLogin, otpLogin, finishPasswordReset, logout, refresh, setUser, errText };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
