@@ -1,7 +1,16 @@
 import axios from 'axios';
 
-const API_BASE_URL = (process.env.REACT_APP_API_URL || 'https://akagerainc-9vkh.onrender.com/api').replace(/\/$/, '');
-export const API_ORIGIN = API_BASE_URL.replace(/\/api$/, '');
+// Normalise whatever REACT_APP_API_URL is given so it always ends with exactly "/api".
+// Accepts:  https://host  |  https://host/  |  https://host/api  |  https://host/api/
+function resolveApiBase(raw) {
+  const fallback = 'https://akagerainc-9vkh.onrender.com/api';
+  let url = (raw || fallback).trim().replace(/\/+$/, '');
+  if (!/\/api$/i.test(url)) url += '/api';
+  return url;
+}
+
+const API_BASE_URL = resolveApiBase(process.env.REACT_APP_API_URL);
+export const API_ORIGIN = API_BASE_URL.replace(/\/api$/i, '');
 
 const api = axios.create({ baseURL: API_BASE_URL, headers: { 'Content-Type': 'application/json' } });
 
