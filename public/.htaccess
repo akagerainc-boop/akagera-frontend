@@ -1,0 +1,21 @@
+# SPA fallback for Apache / cPanel / shared hosting.
+# Any request that is not a real file or directory is served index.html so
+# React Router can handle it (e.g. /services, /products/akagera-pos).
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>
+
+# Long cache for hashed static assets
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|css|woff2?|png|jpg|jpeg|gif|svg|webp|avif)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.(html)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
