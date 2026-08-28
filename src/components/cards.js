@@ -46,7 +46,7 @@ export function ServiceCard({ service: s }) {
       <div className="divider" style={{ margin: '18px 0' }} />
       <div className="between">
         <div>
-          <strong style={{ fontSize: '1.5rem' }}>{priceLabel(s.price, s.currency)}</strong>
+          <strong className="price-accent" style={{ fontSize: '1.5rem' }}>{priceLabel(s.price, s.currency)}</strong>
           <div className="muted" style={{ fontSize: '.82rem' }}>{s.duration_label}</div>
         </div>
         <Link to={`/services/${s.slug}`} className="btn btn--primary btn--sm">View <ArrowRight size={15} /></Link>

@@ -54,7 +54,7 @@ export default function Downloads() {
           {!slug && (
             <div className="chip-row">
               {PLATS.map(({ key, label, icon: Icon }) => (
-                <button key={key} className="pill" style={platform === key ? { background: 'var(--brand)', color: '#fff', borderColor: 'var(--brand)' } : { background: 'rgba(255,255,255,.06)', color: '#fff', borderColor: 'rgba(255,255,255,.2)' }}
+                <button key={key} className={`pill ${platform === key ? '' : 'pill--on-dark'}`} style={platform === key ? { background: 'var(--brand)', color: '#fff', borderColor: 'var(--brand)' } : undefined}
                   onClick={() => { const n = new URLSearchParams(params); key ? n.set('platform', key) : n.delete('platform'); setParams(n); }}>
                   <Icon size={14} /> {label}
                 </button>

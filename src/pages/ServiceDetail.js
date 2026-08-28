@@ -59,8 +59,8 @@ export default function ServiceDetail() {
             <h1>{s.name}</h1>
             <p className="lead mt-2" style={{ color: 'rgba(255,255,255,.82)' }}>{s.short_description || s.description}</p>
             <div className="row mt-3">
-              <span className="pill" style={{ color: '#fff', borderColor: 'rgba(255,255,255,.25)' }}><Clock size={14} /> {s.duration_label}</span>
-              <span className="pill" style={{ color: '#fff', borderColor: 'rgba(255,255,255,.25)' }}>{priceLabel(s.price, s.currency)}</span>
+              <span className="pill pill--brand"><Clock size={14} /> {s.duration_label}</span>
+              <span className="pill pill--brand">{priceLabel(s.price, s.currency)}</span>
             </div>
           </div>
         </div>
@@ -119,7 +119,7 @@ export default function ServiceDetail() {
           </div>
 
           <aside className="card card--pad-lg" style={{ position: 'sticky', top: 88 }}>
-            <div style={{ fontSize: '2rem', fontWeight: 800 }}>{priceLabel(s.price, s.currency)}</div>
+            <div className="price-accent" style={{ fontSize: '2rem', fontWeight: 800 }}>{priceLabel(s.price, s.currency)}</div>
             <div className="muted" style={{ fontSize: '.88rem' }}>{s.duration_label}</div>
             <div className="divider" />
             <h4>Start your order</h4>

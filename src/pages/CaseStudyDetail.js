@@ -30,8 +30,8 @@ export default function CaseStudyDetail() {
         <h1>{c.title}</h1>
         <p className="lead mt-2" style={{ color: 'rgba(255,255,255,.82)' }}>{c.summary}</p>
         <div className="chip-row mt-3">
-          {c.client && <span className="pill" style={{ color: '#fff', borderColor: 'rgba(255,255,255,.25)' }}>Client: {c.client}</span>}
-          {(c.platforms || []).map((p) => <span key={p} className="pill" style={{ color: '#fff', borderColor: 'rgba(255,255,255,.25)' }}>{p}</span>)}
+          {c.client && <span className="pill pill--on-dark">Client: {c.client}</span>}
+          {(c.platforms || []).map((p) => <span key={p} className="pill pill--on-dark">{p}</span>)}
         </div>
       </div></section>
 

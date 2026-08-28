@@ -20,13 +20,29 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
 api.interceptors.response.use(
   (r) => r,
-  (error) => {
-    if (error.response?.status === 401 && !error.config?.url?.includes('/auth/')) {
+  async (error) => {
+    const cfg = error.config || {};
+    const status = error.response?.status;
+
+    if (status === 401 && !cfg.url?.includes('/auth/')) {
       // token invalid/expired — drop it but do not hard-redirect (public pages still work)
       localStorage.removeItem('access_token');
     }
+
+    // Retry transient backend hiccups (503/502/504 or network error) for idempotent GETs.
+    const method = (cfg.method || 'get').toLowerCase();
+    const retriable = (!status || [502, 503, 504].includes(status)) && method === 'get';
+    cfg._retry = cfg._retry || 0;
+    if (retriable && cfg._retry < 3) {
+      cfg._retry += 1;
+      await sleep(500 * cfg._retry);
+      return api(cfg);
+    }
+
     return Promise.reject(error);
   }
 );

@@ -184,6 +184,11 @@ p { color: var(--n-700); }
   border: 1px solid var(--line); border-radius: var(--r-pill); font-size: .82rem;
   font-weight: 600; color: var(--n-700); background: var(--paper);
 }
+/* readable chip on dark hero/section backgrounds */
+.pill--on-dark { background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .24); color: #fff; }
+/* brand-red chip — readable on both light and dark surfaces */
+.pill--brand { background: var(--brand-100); border-color: transparent; color: var(--brand-700); font-weight: 700; }
+.price-accent { color: var(--brand); }
 .status-badge { display: inline-flex; align-items: center; gap: 6px; font-size: .78rem; font-weight: 700; padding: 4px 10px; border-radius: var(--r-pill); }
 .status-badge::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
 .status-badge--active, .status-badge--completed, .status-badge--published, .status-badge--open { color: var(--ok); background: #E7F4EC; }

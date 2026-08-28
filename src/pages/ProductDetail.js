@@ -37,7 +37,7 @@ export default function ProductDetail() {
             <Link to="/products" className="row" style={{ color: 'rgba(255,255,255,.8)', fontSize: '.85rem', marginBottom: 14 }}><ArrowLeft size={14} /> Products</Link>
             <div className="chip-row mb-2">
               {p.category && <span className="badge">{p.category}</span>}
-              {p.version && <span className="pill" style={{ color: '#fff', borderColor: 'rgba(255,255,255,.3)' }}>v{p.version}</span>}
+              {p.version && <span className="pill pill--on-dark">v{p.version}</span>}
               <StatusBadge status={p.status} />
             </div>
             <h1>{p.name}</h1>
