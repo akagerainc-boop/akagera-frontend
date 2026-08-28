@@ -1,0 +1,147 @@
+// Client-side fallbacks so the shell renders instantly before /api/settings resolves.
+export const WHATSAPP_NUMBER = '250795226123';
+
+export const DEFAULT_SETTINGS = {
+  brand: { name: 'Akagera Inc', tagline: 'Technology solutions built for what comes next.', logo: '/assets/inc.png' },
+  hero: {
+    kicker: 'Akagera Inc — Software Solutions',
+    title: 'Technology Solutions Built for What Comes Next.',
+    subtitle:
+      'Akagera Inc builds mobile apps, websites, desktop software, SaaS products, and custom digital solutions that help individuals, businesses, and organizations turn ideas into reliable technology.',
+    primary_cta: { label: 'Explore Our Solutions', url: '/solutions' },
+    secondary_cta: { label: 'Start a Project', url: '/contact?intent=project' },
+  },
+  homepage_sections: [
+    { key: 'hero', enabled: true, order: 1 },
+    { key: 'product_grid', enabled: true, order: 2 },
+    { key: 'featured_products', enabled: true, order: 3 },
+    { key: 'services', enabled: true, order: 4 },
+    { key: 'industries', enabled: true, order: 5 },
+    { key: 'stats', enabled: true, order: 6 },
+    { key: 'case_studies', enabled: true, order: 7 },
+    { key: 'testimonials', enabled: true, order: 8 },
+    { key: 'blog', enabled: true, order: 9 },
+    { key: 'cta', enabled: true, order: 10 },
+    { key: 'location', enabled: true, order: 11 },
+  ],
+  product_categories: [
+    { name: 'Mobile Applications', slug: 'mobile', icon: 'smartphone', description: 'Apps built for Android and iOS.' },
+    { name: 'Web Applications', slug: 'web', icon: 'globe', description: 'Modern responsive web platforms.' },
+    { name: 'Windows Software', slug: 'windows', icon: 'monitor', description: 'Native, professional Windows applications.' },
+    { name: 'macOS Software', slug: 'macos', icon: 'command', description: "Software for Apple's desktop ecosystem." },
+    { name: 'SaaS Platforms', slug: 'saas', icon: 'cloud', description: 'Cloud software via subscriptions.' },
+    { name: 'Custom Software', slug: 'custom', icon: 'layers', description: 'Built specifically for your organization.' },
+  ],
+  social_links: {
+    linkedin: 'https://www.linkedin.com/company/akagera-inc',
+    github: 'https://github.com/akagerainc-boop',
+    x: 'https://x.com/akagerainc',
+    facebook: 'https://www.facebook.com/akagerainc',
+    instagram: 'https://www.instagram.com/akagerainc',
+    youtube: 'https://www.youtube.com/@akagerainc',
+  },
+  contact_info: {
+    email: 'akagerainc@gmail.com',
+    support_email: 'support@akagerainc.store',
+    phone: '+250 795 226 123',
+    whatsapp: WHATSAPP_NUMBER,
+    address_lines: ['Innovation Hub Building', 'Main Street, Musanze District', 'Northern Province, Rwanda'],
+    hours: ['Monday - Friday: 8:00 AM - 6:00 PM', 'Saturday: 9:00 AM - 1:00 PM', 'Sunday: Closed'],
+    map_query: 'Musanze,Rwanda',
+  },
+  company_info: {},
+  whatsapp: { number: WHATSAPP_NUMBER, message: "Hello Akagera Inc, I'd like to talk about a project." },
+  pricing: [],
+  seo_defaults: {
+    title: 'Akagera Inc — Software Solutions',
+    description: 'Akagera Inc builds software, sells digital products and services, publishes applications, and provides licenses, subscriptions, and professional technology solutions.',
+    og_image: '/assets/inc.png',
+    site_url: 'https://akagerainc.store',
+  },
+};
+
+export const DEFAULT_NAV = {
+  header: [
+    { label: 'Products', url: '/products', children: [
+      { label: 'Mobile Apps', url: '/products?category=mobile' },
+      { label: 'Web Applications', url: '/products?category=web' },
+      { label: 'Windows Software', url: '/products?category=windows' },
+      { label: 'macOS Software', url: '/products?category=macos' },
+      { label: 'SaaS Products', url: '/products?category=saas' },
+      { label: 'All Products', url: '/products' },
+    ]},
+    { label: 'Solutions', url: '/solutions', children: [
+      { label: 'Business Solutions', url: '/solutions/business' },
+      { label: 'Enterprise Solutions', url: '/solutions/enterprise' },
+      { label: 'Education Solutions', url: '/solutions/education' },
+      { label: 'Cloud Solutions', url: '/solutions/cloud' },
+      { label: 'Custom Software', url: '/solutions/custom-software' },
+      { label: 'Digital Transformation', url: '/solutions/digital-transformation' },
+    ]},
+    { label: 'Services', url: '/services', children: [
+      { label: 'Mobile App Development', url: '/services' },
+      { label: 'Web Development', url: '/services' },
+      { label: 'UI/UX Design', url: '/services' },
+      { label: 'Backend & API Development', url: '/services' },
+      { label: 'Software Maintenance', url: '/services' },
+      { label: 'Technical Support', url: '/services' },
+    ]},
+    { label: 'Downloads', url: '/downloads', children: [
+      { label: 'Android APK', url: '/downloads?platform=android' },
+      { label: 'iOS Apps', url: '/downloads?platform=ios' },
+      { label: 'Windows Apps', url: '/downloads?platform=windows' },
+      { label: 'macOS Apps', url: '/downloads?platform=macos' },
+      { label: 'All Releases', url: '/downloads' },
+    ]},
+    { label: 'Resources', url: '/documentation', children: [
+      { label: 'Documentation', url: '/documentation' },
+      { label: 'Blog', url: '/blog' },
+      { label: 'Case Studies', url: '/case-studies' },
+      { label: 'Help Center', url: '/support' },
+    ]},
+    { label: 'Company', url: '/about', children: [
+      { label: 'About Akagera Inc', url: '/about' },
+      { label: 'Careers', url: '/careers' },
+      { label: 'Internships', url: '/internships' },
+      { label: 'Portfolio', url: '/portfolio' },
+      { label: 'Contact', url: '/contact' },
+      { label: 'Business Portal', url: '/business' },
+    ]},
+    { label: 'Pricing', url: '/pricing', children: [] },
+  ],
+  footer: [
+    { column_group: 'Products', children: [
+      { label: 'Mobile Apps', url: '/products?category=mobile' },
+      { label: 'Web Apps', url: '/products?category=web' },
+      { label: 'Windows Apps', url: '/products?category=windows' },
+      { label: 'macOS Apps', url: '/products?category=macos' },
+      { label: 'All Products', url: '/products' },
+    ]},
+    { column_group: 'Services', children: [
+      { label: 'App Development', url: '/services' },
+      { label: 'Web Development', url: '/services' },
+      { label: 'UI/UX', url: '/services' },
+      { label: 'Maintenance', url: '/services' },
+      { label: 'Support', url: '/support' },
+    ]},
+    { column_group: 'Company', children: [
+      { label: 'About', url: '/about' },
+      { label: 'Careers', url: '/careers' },
+      { label: 'Internships', url: '/internships' },
+      { label: 'Portfolio', url: '/portfolio' },
+      { label: 'Contact', url: '/contact' },
+    ]},
+    { column_group: 'Resources', children: [
+      { label: 'Blog', url: '/blog' },
+      { label: 'Documentation', url: '/documentation' },
+      { label: 'Help Center', url: '/support' },
+      { label: 'Release Notes', url: '/downloads' },
+    ]},
+    { column_group: 'Legal', children: [
+      { label: 'Privacy Policy', url: '/privacy' },
+      { label: 'Terms of Service', url: '/terms' },
+      { label: 'Refund Policy', url: '/refund-policy' },
+      { label: 'Cookie Policy', url: '/cookie-policy' },
+    ]},
+  ],
+};
