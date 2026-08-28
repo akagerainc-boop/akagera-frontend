@@ -4,11 +4,12 @@ import {
   LayoutDashboard, Package, Wrench, ShoppingBag, Users, KeyRound,
   Download, Newspaper, GraduationCap, Briefcase, LifeBuoy, Image as ImageIcon,
   Navigation as NavIcon, Settings as SettingsIcon, ScrollText, LogOut, Plus, Trash2, Pencil, X,
+  FileText, Mail, Phone, ExternalLink,
 } from 'lucide-react';
 import Seo from '../components/Seo';
 import { PageLoader, IosSpinner } from '../components/Loader';
 import { StatusBadge, EmptyState, Modal } from '../components/ui';
-import { adminAPI, errText, mediaUrl } from '../api';
+import { adminAPI, errText, mediaUrl, API_ORIGIN } from '../api';
 
 /* ---------- resource field configs ---------- */
 const ARR = (v) => Array.isArray(v) ? v.join(', ') : (v || '');
@@ -478,6 +479,120 @@ function SettingsAdmin() {
   );
 }
 
+const APPLICANT_STATUSES = ['submitted', 'reviewing', 'shortlisted', 'interview', 'offered', 'hired', 'rejected'];
+
+function fileHref(u) {
+  if (!u) return null;
+  return /^https?:/.test(u) ? u : `${API_ORIGIN}${u}`;
+}
+
+function ApplicantsManager({ kind }) {
+  const label = kind === 'internship' ? 'Internship applicants' : 'Job applicants';
+  const [rows, setRows] = useState(null);
+  const [filter, setFilter] = useState('');
+  const [open, setOpen] = useState(null);
+  const [busy, setBusy] = useState(false);
+
+  const load = useCallback(() => {
+    setRows(null);
+    adminAPI.applications(kind).then((r) => setRows(r.data || [])).catch(() => setRows([]));
+  }, [kind]);
+  useEffect(() => { load(); }, [load]);
+
+  const setStatus = async (id, status) => {
+    setBusy(true);
+    try {
+      await adminAPI.setApplicationStatus(kind, id, status);
+      setOpen((o) => (o && o.id === id ? { ...o, status } : o));
+      setRows((rs) => rs.map((r) => (r.id === id ? { ...r, status } : r)));
+    } finally { setBusy(false); }
+  };
+
+  const remove = async (id) => {
+    if (!window.confirm('Delete this application?')) return;
+    await adminAPI.deleteApplication(kind, id);
+    setOpen(null);
+    load();
+  };
+
+  if (!rows) return <PageLoader />;
+  const shown = filter ? rows.filter((r) => r.status === filter) : rows;
+
+  return (
+    <>
+      <div className="between mb-3">
+        <h1>{label} <span className="muted" style={{ fontSize: '1rem' }}>({rows.length})</span></h1>
+        <select value={filter} onChange={(e) => setFilter(e.target.value)} style={{ maxWidth: 200 }}>
+          <option value="">All statuses</option>
+          {APPLICANT_STATUSES.map((s) => <option key={s}>{s}</option>)}
+        </select>
+      </div>
+
+      {shown.length === 0 ? <EmptyState icon={<FileText size={24} />} title="No applications yet" /> : (
+        <div className="table-wrap">
+          <table className="data">
+            <thead><tr>
+              <th>Name</th><th>Email</th><th>Phone</th>
+              <th>{kind === 'internship' ? 'Program' : 'Position'}</th>
+              <th>Status</th><th>Applied</th><th /></tr></thead>
+            <tbody>
+              {shown.map((a) => (
+                <tr key={a.id}>
+                  <td>{a.full_name}</td>
+                  <td>{a.email}</td>
+                  <td>{a.phone || '—'}</td>
+                  <td>{a.position}</td>
+                  <td><StatusBadge status={a.status || 'submitted'} /></td>
+                  <td>{a.created_at ? new Date(a.created_at).toLocaleDateString() : '—'}</td>
+                  <td><button className="btn btn--ghost btn--sm" onClick={() => setOpen(a)}>View</button></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      <Modal open={!!open} onClose={() => setOpen(null)} title={open ? open.full_name : ''}>
+        {open && (
+          <div className="stack" style={{ gap: 12 }}>
+            <div className="row" style={{ gap: 8 }}>
+              <a className="pill" href={`mailto:${open.email}`}><Mail size={13} /> {open.email}</a>
+              {open.phone && <a className="pill" href={`tel:${open.phone}`}><Phone size={13} /> {open.phone}</a>}
+            </div>
+
+            <div><b>{kind === 'internship' ? 'Program' : 'Position'}:</b> {open.position}</div>
+            {open.education && <div><b>Education:</b> {open.education}</div>}
+            {open.interest_area && <div><b>Area of interest:</b> {open.interest_area}</div>}
+            {open.preferred_duration && <div><b>Preferred duration:</b> {open.preferred_duration}</div>}
+            {open.start_date && <div><b>Start date:</b> {new Date(open.start_date).toLocaleDateString()}</div>}
+            {open.message && <div><b>Message:</b><p className="muted" style={{ marginTop: 4 }}>{open.message}</p></div>}
+            {open.cover_letter && <div><b>Cover letter:</b><p className="muted" style={{ marginTop: 4, whiteSpace: 'pre-line' }}>{open.cover_letter}</p></div>}
+
+            <div>
+              <b>{open.file_label || 'File'}:</b>{' '}
+              {open.file_url
+                ? <a className="btn btn--secondary btn--sm" href={fileHref(open.file_url)} target="_blank" rel="noopener noreferrer"><Download size={14} /> Download {open.file_label} <ExternalLink size={12} /></a>
+                : <span className="muted">not provided</span>}
+            </div>
+
+            <div className="field" style={{ margin: 0 }}>
+              <label>Status</label>
+              <select value={open.status || 'submitted'} disabled={busy} onChange={(e) => setStatus(open.id, e.target.value)}>
+                {APPLICANT_STATUSES.map((s) => <option key={s}>{s}</option>)}
+              </select>
+            </div>
+
+            <div className="row" style={{ justifyContent: 'space-between' }}>
+              <span className="muted" style={{ fontSize: '.8rem' }}>Applied {open.created_at ? new Date(open.created_at).toLocaleString() : ''}</span>
+              <button className="btn btn--ghost btn--sm" style={{ color: 'var(--err)' }} onClick={() => remove(open.id)}><Trash2 size={13} /> Delete</button>
+            </div>
+          </div>
+        )}
+      </Modal>
+    </>
+  );
+}
+
 function AuditAdmin() {
   const [rows, setRows] = useState(null);
   useEffect(() => { adminAPI.audit().then((r) => setRows(r.data)).catch(() => setRows([])); }, []);
@@ -537,7 +652,9 @@ const SIDEBAR = [
   ['blog', 'Blog', Newspaper],
   ['case-studies', 'Case studies', Briefcase],
   ['internships', 'Internships', GraduationCap],
+  ['internship-applicants', 'Internship applicants', FileText],
   ['careers', 'Careers', Briefcase],
+  ['job-applicants', 'Job applicants', FileText],
   ['industries', 'Industries', LayoutDashboard],
   ['testimonials', 'Testimonials', Users],
   ['faqs', 'FAQs', LifeBuoy],
@@ -584,6 +701,8 @@ export default function Admin() {
             <Route path="pages" element={<ContentAdmin />} />
             <Route path="settings" element={<SettingsAdmin />} />
             <Route path="audit" element={<AuditAdmin />} />
+            <Route path="internship-applicants" element={<ApplicantsManager kind="internship" />} />
+            <Route path="job-applicants" element={<ApplicantsManager kind="job" />} />
             {Object.entries(RESOURCES).map(([key, cfg]) => (
               <Route key={key} path={key} element={<ResourceManager cfg={cfg} />} />
             ))}
