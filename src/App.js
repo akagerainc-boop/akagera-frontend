@@ -47,6 +47,24 @@ function ScrollToTop() {
   return null;
 }
 
+// /privacy-policy is a static page (public/privacy-policy.html) that hosts serve
+// directly, so it works for Google Play's reviewers without JavaScript. This only
+// runs when the SPA itself routes there (client-side nav, or the dev server).
+function StaticPage({ href }) {
+  // If a host redirects href straight back here (e.g. "clean URLs" turning
+  // .html into /privacy-policy), stop after one hop instead of looping.
+  const key = `static-hop:${href}`;
+  const [looped] = React.useState(() => {
+    try { return Date.now() - Number(sessionStorage.getItem(key) || 0) < 5000; } catch { return false; }
+  });
+  useEffect(() => {
+    if (looped) return;
+    try { sessionStorage.setItem(key, String(Date.now())); } catch { /* storage blocked: redirect anyway */ }
+    window.location.replace(href);
+  }, [href, key, looped]);
+  return looped ? <div className="container" style={{ padding: '48px 0' }}><a href={href}>Open the BPay Privacy Policy</a></div> : <PageLoader />;
+}
+
 function RequireAuth({ children }) {
   const { user, ready } = useAuth();
   const location = useLocation();
@@ -97,6 +115,7 @@ function Shell() {
             <Route path="/business" element={<BusinessPortal />} />
             <Route path="/admin/*" element={<Admin />} />
             <Route path="/privacy" element={<Legal doc="legal_privacy" />} />
+            <Route path="/privacy-policy" element={<StaticPage href="/privacy-policy.html" />} />
             <Route path="/terms" element={<Legal doc="legal_terms" />} />
             <Route path="/refund-policy" element={<Legal doc="legal_refund" />} />
             <Route path="/cookie-policy" element={<Legal doc="legal_cookie" />} />

@@ -51,6 +51,8 @@ export default function Footer() {
         <div className="footer__bottom">
           <span>© {year} Akagera Inc. All rights reserved.</span>
           <span className="row" style={{ gap: 16 }}>
+            {/* plain <a>: this is a static page outside the SPA */}
+            <a href="/privacy-policy">BPay Privacy Policy</a>
             {contact.email && <a href={`mailto:${contact.email}`}>{contact.email}</a>}
             {contact.whatsapp && (
               <a href={`https://wa.me/${String(contact.whatsapp).replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer">

@@ -2,7 +2,8 @@
 # If your Render static site was created from the dashboard (not a blueprint),
 # this file is ignored — instead add a rule under
 #   Settings -> Redirect and Rewrite Rules:
-#     Source: /*   Destination: /index.html   Action: Rewrite
+#     Source: /privacy-policy   Destination: /privacy-policy.html   Action: Rewrite
+#     Source: /*   Destination: /index.html   Action: Rewrite  (keep this one last)
 services:
   - type: web
     name: akagera-frontend
@@ -25,6 +26,9 @@ services:
       - key: REACT_APP_FIREBASE_APP_ID
         sync: false
     routes:
+      - type: rewrite
+        source: /privacy-policy
+        destination: /privacy-policy.html
       - type: rewrite
         source: /*
         destination: /index.html

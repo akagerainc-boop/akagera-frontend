@@ -2,6 +2,12 @@
   command = "npm run build"
   publish = "build"
 
+# BPay privacy policy is a static page (Google Play needs it without JS)
+[[redirects]]
+  from = "/privacy-policy"
+  to = "/privacy-policy.html"
+  status = 200
+
 # SPA fallback: serve index.html for any route that isn't a real file
 [[redirects]]
   from = "/*"
