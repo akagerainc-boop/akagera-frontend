@@ -25,7 +25,7 @@
     "name": "BPay – Easy Mobile Payments Privacy Policy",
     "url": "https://akagerainc.store/privacy-policy",
     "datePublished": "2026-09-30",
-    "dateModified": "2026-09-30",
+    "dateModified": "2026-10-02",
     "about": {
       "@type": "MobileApplication",
       "name": "BPay – Easy Mobile Payments",
@@ -201,7 +201,7 @@
       <p class="hero__lead">This Privacy Policy explains how Akagera Inc collects, uses, stores, protects, and handles information when you use BPay – Easy Mobile Payments.</p>
       <div class="dates">
         <span class="chip"><span>Effective Date:</span> <time datetime="2026-09-30">September 30, 2026</time></span>
-        <span class="chip"><span>Last Updated:</span> <time datetime="2026-09-30">September 30, 2026</time></span>
+        <span class="chip"><span>Last Updated:</span> <time datetime="2026-10-02">October 2, 2026</time></span>
       </div>
     </div>
   </div>
@@ -258,7 +258,7 @@
         <ul class="glance">
           <li><b>What app?</b>BPay – Easy Mobile Payments, an Android app that helps you start MTN and Airtel mobile-money USSD payments in Rwanda.</li>
           <li><b>Who runs it?</b>Akagera Inc, which develops and operates BPay.</li>
-          <li><b>What we process</b>Phone numbers, recipient numbers and merchant codes, amounts, payment results, and a random app install ID.</li>
+          <li><b>What we process</b>Phone numbers, recipient numbers and merchant codes, recipient names, amounts, payment results and references, your balance when you use Check Balance, and a random app install ID.</li>
           <li><b>Why</b>To start your payments, show your history, send notifications, run payment links, and keep BPay working and secure.</li>
           <li><b>Shared with</b>Your mobile-money operator, and service providers such as Google Firebase and our hosting provider. <strong>We do not sell your data.</strong></li>
           <li><b>Never collected</b>Your mobile-money PIN, your fingerprint or face data, your location, your SMS messages, or an advertising ID.</li>
@@ -317,7 +317,7 @@
         <p>If you email or call us, we receive the information you give us, such as your email address, phone number, and your message.</p>
 
         <div class="card card--note">
-          <p><strong>What BPay does not collect:</strong> your mobile-money PIN or balance, passwords, location, SMS messages, call logs, photos from your gallery, your fingerprint or face data, or an advertising ID. BPay contains no advertising, analytics, or crash-reporting SDKs.</p>
+          <p><strong>What BPay does not collect:</strong> your mobile-money PIN, passwords, location, SMS messages, call logs, photos from your gallery, your fingerprint or face data, or an advertising ID. BPay contains no advertising, analytics, or crash-reporting SDKs.</p>
         </div>
       </section>
 
@@ -348,6 +348,14 @@
         <div class="card card--key">
           <p>BPay includes an optional Android Accessibility Service. <strong>It is off by default.</strong> It runs only if you turn it on yourself in Android Settings → Accessibility → BPay, after BPay explains what it does.</p>
           <p><strong>What it does:</strong> after a USSD payment, your operator shows its reply in a system dialog (for example, "You have sent 5,000 RWF to …" or "Insufficient balance"). The service reads the text of that dialog, so BPay can tell whether the payment succeeded, failed, or is unclear, and can record the result and any transaction reference.</p>
+          <p><strong>What data it collects:</strong> the operator's reply can contain, and BPay collects from it:</p>
+          <ul>
+            <li><strong>phone numbers</strong>: the recipient's phone number, or the merchant code;</li>
+            <li><strong>names</strong>: the recipient's or merchant's name;</li>
+            <li><strong>financial information</strong>: the amount and any fees, and your mobile-money balance when you use Check Balance;</li>
+            <li><strong>transaction details</strong>: whether it succeeded, failed, or is unclear, and the operator's transaction reference or ID.</li>
+          </ul>
+          <p><strong>Why:</strong> only to confirm the result of a payment or balance check you started in BPay, and to record it in your payment history. This data is not used for advertising and is never sold.</p>
           <p><strong>What it does not do:</strong> it reads only on-screen text from dialog windows. It does not read your typing, passwords, or PIN, and it does not perform any taps or actions for you. Your PIN is typed into your operator's own screen, never into BPay.</p>
           <p><strong>Where the data goes:</strong> the reply text is used on your device to classify the result. To classify it more accurately, BPay may send the reply text to Google's Gemini model through Firebase AI Logic (see <a href="#third-party">Section 10</a>). If that is unavailable, BPay classifies the text on your device. The resulting status, reference, and message become part of the transaction record described in 3.3.</p>
           <p>You can turn the service off at any time in Android Settings → Accessibility. BPay will keep working, but you may be asked to confirm payment results yourself.</p>
