@@ -63,7 +63,7 @@ export const DEFAULT_SETTINGS = {
 export const DEFAULT_NAV = {
   header: [
     { label: 'Products', url: '/products', children: [
-      { label: 'Mobile Apps', url: '/products?category=mobile' },
+      { label: 'Mobile Apps', url: '/mobile-apps' },
       { label: 'Web Applications', url: '/products?category=web' },
       { label: 'Windows Software', url: '/products?category=windows' },
       { label: 'macOS Software', url: '/products?category=macos' },
@@ -111,7 +111,7 @@ export const DEFAULT_NAV = {
   ],
   footer: [
     { column_group: 'Products', children: [
-      { label: 'Mobile Apps', url: '/products?category=mobile' },
+      { label: 'Mobile Apps', url: '/mobile-apps' },
       { label: 'Web Apps', url: '/products?category=web' },
       { label: 'Windows Apps', url: '/products?category=windows' },
       { label: 'macOS Apps', url: '/products?category=macos' },

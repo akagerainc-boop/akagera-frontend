@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, ChevronDown, Search, LayoutDashboard, LogIn } from 'lucide-react';
+import { Menu, X, ChevronDown, Search, LayoutDashboard, LogIn, Smartphone, Download } from 'lucide-react';
 import { useSite } from './SiteContext';
 import { useAuth } from '../context/AuthContext';
 import SearchBar from './SearchBar';
@@ -21,7 +21,9 @@ export default function Navbar() {
     return () => { document.body.style.overflow = ''; };
   }, [drawer, search]);
 
-  const header = nav.header || [];
+  // Apps are the main thing on this site: always show them first, whatever order the CMS nav uses.
+  const header = (nav.header || []).filter((item) => item.url !== '/mobile-apps');
+  const onApps = location.pathname.startsWith('/mobile-apps');
   const brand = settings?.brand?.name || 'Akagera Inc';
 
   return (
@@ -35,6 +37,9 @@ export default function Navbar() {
             </Link>
 
             <div className="nav__links">
+              <Link to="/mobile-apps" className={`nav__link nav__link--apps${onApps ? ' is-active' : ''}`} onMouseEnter={() => setOpenMenu(null)}>
+                <Smartphone size={16} /> Apps
+              </Link>
               {header.map((item) => (
                 <div key={item.label} onMouseEnter={() => setOpenMenu(item.children?.length ? item.label : null)}>
                   {item.children?.length ? (
@@ -63,9 +68,10 @@ export default function Navbar() {
               ) : (
                 <Link to="/login" className="btn btn--ghost btn--sm"><LogIn size={15} /> Sign in</Link>
               )}
-              <Link to="/contact?intent=project" className="btn btn--primary btn--sm">Get Started</Link>
+              <Link to="/mobile-apps" className="btn btn--primary btn--sm"><Download size={15} /> Get the apps</Link>
             </div>
 
+            <Link to="/mobile-apps" className="btn btn--primary btn--sm nav__apps-mobile"><Download size={15} /> Apps</Link>
             <button className="nav__burger" onClick={() => setDrawer(true)} aria-label="Open menu">
               <Menu size={24} />
             </button>
@@ -96,6 +102,9 @@ export default function Navbar() {
           <button className="btn btn--ghost btn--sm" onClick={() => setDrawer(false)} aria-label="Close menu"><X size={22} /></button>
         </div>
         <div className="drawer__body">
+          <Link to="/mobile-apps" className="drawer__apps">
+            <Smartphone size={20} /> <span><b>Our Apps</b><small>Download Android apps</small></span>
+          </Link>
           <button className="drawer__group" style={{ width: '100%' }} onClick={() => { setDrawer(false); setSearch(true); }}>
             <span style={{ display: 'flex', gap: 10, padding: '14px 12px', fontWeight: 700 }}><Search size={18} /> Search</span>
           </button>
@@ -126,7 +135,7 @@ export default function Navbar() {
             ) : (
               <Link to="/login" className="btn btn--secondary btn--block">Sign in</Link>
             )}
-            <Link to="/contact?intent=project" className="btn btn--primary btn--block">Get Started</Link>
+            <Link to="/contact?intent=project" className="btn btn--primary btn--block">Start a project</Link>
           </div>
         </div>
       </aside>

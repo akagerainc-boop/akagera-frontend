@@ -1,27 +1,54 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  ArrowRight, Smartphone, Globe, Monitor, Command, Cloud, Layers,
-  Users, Download, Star, ShieldCheck, MapPin, Quote,
+  ArrowRight, Download, ShieldCheck, Smartphone, MapPin, Quote, Search, BadgeCheck, Zap,
 } from 'lucide-react';
 import Seo from '../components/Seo';
-import Carousel from '../components/Carousel';
 import Reveal from '../components/Reveal';
 import Parallax from '../components/Parallax';
 import { ProductCard, ServiceCard, BlogCard } from '../components/cards';
-import { SectionHead } from '../components/ui';
+import { AppIcon, MobileAppCard, appMeta } from '../components/AppCard';
+import { SectionHead, EmptyState } from '../components/ui';
 import { PageLoader } from '../components/Loader';
 import { useSite } from '../components/SiteContext';
-import { productAPI, serviceAPI, blogAPI, caseStudyAPI, contentAPI } from '../api';
+import { productAPI, serviceAPI, blogAPI, caseStudyAPI, contentAPI, mobileAppAPI, mediaUrl } from '../api';
 
-const CATEGORY_ICONS = { smartphone: Smartphone, globe: Globe, monitor: Monitor, command: Command, cloud: Cloud, layers: Layers };
+const HOME_APP_LIMIT = 6;
+
+function FeaturedApp({ app }) {
+  return (
+    <div className="hero-app">
+      <span className="hero-app__label">Featured app</span>
+      <Link to={`/mobile-apps/${app.slug}`} className="hero-app__head">
+        <AppIcon app={app} size={72} />
+        <div style={{ minWidth: 0 }}>
+          <h3>{app.name}</h3>
+          <div className="hero-app__meta">{appMeta(app)}</div>
+        </div>
+      </Link>
+      {app.tagline && <p className="hero-app__tagline">{app.tagline}</p>}
+      {app.screenshots?.length > 0 && (
+        <Link to={`/mobile-apps/${app.slug}`} className="hero-app__shots" aria-label={`${app.name} screenshots`}>
+          {app.screenshots.slice(0, 3).map((s, i) => (
+            <img key={i} src={mediaUrl(s)} alt="" loading={i ? 'lazy' : 'eager'} />
+          ))}
+        </Link>
+      )}
+      <a href={mobileAppAPI.downloadUrl(app.slug)} className="btn btn--primary btn--lg btn--block" rel="nofollow">
+        <Download size={18} /> Download APK
+      </a>
+    </div>
+  );
+}
 
 export default function Home() {
   const { settings } = useSite();
-  const hero = settings?.hero || {};
+  const [apps, setApps] = useState(null);
   const [data, setData] = useState(null);
 
   useEffect(() => {
+    // Apps load on their own so the main content never waits on the secondary sections.
+    mobileAppAPI.list().then((r) => setApps(r.data || [])).catch(() => setApps([]));
     Promise.allSettled([
       productAPI.list({ featured: true }),
       serviceAPI.list({ featured: true }),
@@ -45,82 +72,78 @@ export default function Home() {
     .filter((s) => s.enabled).sort((a, b) => a.order - b.order).map((s) => s.key);
   const on = (key) => sections.length === 0 || sections.includes(key);
 
-  const productCats = settings?.product_categories || [];
-  const stats = [
-    { icon: <Users size={22} />, value: '10K+', label: 'Active users' },
-    { icon: <Download size={22} />, value: '50K+', label: 'Downloads' },
-    { icon: <Star size={22} />, value: '4.9/5', label: 'Client rating' },
-    { icon: <ShieldCheck size={22} />, value: 'Prod-ready', label: 'Security posture' },
-  ];
+  const featured = apps?.[0];
 
   return (
     <>
-      <Seo title={null} description={hero.subtitle} />
+      <Seo title={null} description="Download free Android apps by Akagera Inc. Install the APK directly on your phone." />
 
-      {/* HERO */}
-      {on('hero') && (
-        <header className="hero">
-          <div className="hero__bg"><Carousel pageType="home" /></div>
-          <div className="hero__scrim" />
-          <div className="container">
-            <div className="hero__inner">
-              <span className="eyebrow" style={{ color: '#fff', opacity: .8 }}>{hero.kicker || 'Akagera Inc'}</span>
-              <h1>{hero.title || 'Technology Solutions Built for What Comes Next.'}</h1>
-              <p className="lead mt-2" style={{ color: 'rgba(255,255,255,.85)' }}>{hero.subtitle}</p>
-              <div className="row mt-4">
-                <Link to={hero.primary_cta?.url || '/solutions'} className="btn btn--primary btn--lg">
-                  {hero.primary_cta?.label || 'Explore Our Solutions'} <ArrowRight size={18} />
-                </Link>
-                <Link to={hero.secondary_cta?.url || '/contact?intent=project'} className="btn btn--outline-light btn--lg">
-                  {hero.secondary_cta?.label || 'Start a Project'}
-                </Link>
-              </div>
-              <div className="chip-row mt-4">
-                {['Smartphone', 'Browser', 'Windows', 'macOS', 'Cloud', 'APIs'].map((x) => (
-                  <span key={x} className="pill" style={{ background: 'rgba(255,255,255,.1)', borderColor: 'rgba(255,255,255,.2)', color: '#fff' }}>{x}</span>
-                ))}
-              </div>
+      {/* HERO — apps first */}
+      <header className="apps-hero">
+        <div className="container apps-hero__grid">
+          <div className="apps-hero__copy">
+            <span className="pill pill--on-dark"><Smartphone size={13} /> Android apps</span>
+            <h1>Useful apps for your Android phone.</h1>
+            <p className="lead">
+              Built by Akagera Inc. Free to download — get the APK straight from us and install it in seconds.
+            </p>
+            <div className="row mt-3">
+              <a href="#apps" className="btn btn--primary btn--lg">Browse apps <ArrowRight size={18} /></a>
+              <a href="#install" className="btn btn--outline-light btn--lg">How to install</a>
             </div>
+            <ul className="apps-hero__trust">
+              <li><BadgeCheck size={16} /> Free</li>
+              <li><ShieldCheck size={16} /> Published by Akagera Inc</li>
+              <li><Zap size={16} /> Direct download</li>
+            </ul>
           </div>
-        </header>
+          {featured && <FeaturedApp app={featured} />}
+        </div>
+      </header>
+
+      {/* ALL APPS */}
+      <section className="section section--tight" id="apps">
+        <div className="container">
+          <div className="between mb-3">
+            <SectionHead eyebrow="Our apps" title="Download our apps" />
+            {apps?.length > HOME_APP_LIMIT && (
+              <Link to="/mobile-apps" className="btn btn--secondary btn--sm">See all {apps.length} apps <ArrowRight size={15} /></Link>
+            )}
+          </div>
+          {!apps ? <PageLoader /> : apps.length === 0 ? (
+            <EmptyState icon={<Smartphone size={26} />} title="No apps published yet">
+              Our first apps are on the way. Check back soon.
+            </EmptyState>
+          ) : (
+            <div className="grid grid-3">
+              {apps.slice(0, HOME_APP_LIMIT).map((a) => <MobileAppCard key={a.id} app={a} />)}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* INSTALL STEPS */}
+      {apps?.length > 0 && (
+        <section className="section section--tight section--soft" id="install">
+          <div className="container">
+            <SectionHead eyebrow="Easy install" title="Install in three steps" />
+            <ol className="steps">
+              <li><span className="steps__n"><Download size={18} /></span><div><b>Download</b><p>Tap <b>Download APK</b> on your Android phone.</p></div></li>
+              <li><span className="steps__n"><Search size={18} /></span><div><b>Open the file</b><p>Find it in your notifications or the Downloads folder.</p></div></li>
+              <li><span className="steps__n"><ShieldCheck size={18} /></span><div><b>Install</b><p>Allow <b>Install unknown apps</b> if asked, then tap Install.</p></div></li>
+            </ol>
+          </div>
+        </section>
       )}
 
-      {!data ? <PageLoader /> : (
+      {data && (
         <>
-          {/* PRODUCT GRID */}
-          {on('product_grid') && (
-            <section className="section">
-              <div className="container">
-                <Reveal><SectionHead eyebrow="Products" title="Software built by Akagera Inc">
-                  Applications across every platform your organization runs on.
-                </SectionHead></Reveal>
-                <div className="grid grid-3">
-                  {productCats.map((c, i) => {
-                    const Icon = CATEGORY_ICONS[c.icon] || Layers;
-                    return (
-                      <Reveal key={c.slug} delay={i * 40}>
-                        <Link to={`/products?category=${c.slug}`} className="card card--hover" style={{ display: 'block' }}>
-                          <div className="empty__icon" style={{ marginBottom: 14 }}><Icon size={22} /></div>
-                          <h3 style={{ fontSize: '1.15rem' }}>{c.name}</h3>
-                          <p className="mt-1" style={{ fontSize: '.92rem' }}>{c.description}</p>
-                          <span className="row mt-2" style={{ color: 'var(--brand)', fontWeight: 600, fontSize: '.88rem' }}>
-                            Explore <ArrowRight size={14} />
-                          </span>
-                        </Link>
-                      </Reveal>
-                    );
-                  })}
-                </div>
-              </div>
-            </section>
-          )}
-
           {/* FEATURED PRODUCTS */}
           {on('featured_products') && data.products.length > 0 && (
-            <section className="section section--soft">
+            <section className="section">
               <div className="container">
                 <div className="between mb-3">
-                  <SectionHead eyebrow="Featured" title="Featured Akagera Products" />
+                  <SectionHead eyebrow="More from us" title="Other products" />
                   <Link to="/products" className="btn btn--secondary btn--sm hide-mobile">All products <ArrowRight size={15} /></Link>
                 </div>
                 <div className="grid grid-3">
@@ -132,7 +155,7 @@ export default function Home() {
 
           {/* SERVICES */}
           {on('services') && data.services.length > 0 && (
-            <section className="section">
+            <section className="section section--soft">
               <div className="container">
                 <Reveal><SectionHead eyebrow="Services" title="Delivery you can buy online" center>
                   Fixed scope, clear durations, transparent pricing — purchased and tracked from your dashboard.
@@ -158,22 +181,6 @@ export default function Home() {
                       <h4 style={{ color: '#fff' }}>{ind.name}</h4>
                       <p style={{ fontSize: '.85rem', color: 'rgba(255,255,255,.66)' }}>{ind.summary}</p>
                     </Link>
-                  ))}
-                </div>
-              </div>
-            </section>
-          )}
-
-          {/* STATS */}
-          {on('stats') && (
-            <section className="section--tight section">
-              <div className="container">
-                <div className="grid grid-4">
-                  {stats.map((s) => (
-                    <div key={s.label} className="card row" style={{ gap: 14 }}>
-                      <span style={{ color: 'var(--brand)' }}>{s.icon}</span>
-                      <span><b style={{ fontSize: '1.3rem', display: 'block' }}>{s.value}</b><span className="muted" style={{ fontSize: '.85rem' }}>{s.label}</span></span>
-                    </div>
                   ))}
                 </div>
               </div>
@@ -242,8 +249,8 @@ export default function Home() {
                 <Parallax speed={0.06}>
                   <div className="between">
                     <div>
-                      <h2>Ready to build?</h2>
-                      <p className="mt-1">Send a brief or ask for pricing — we respond within one business day.</p>
+                      <h2>Need an app built?</h2>
+                      <p className="mt-1">We also build Android apps for businesses. Send a brief — we reply within one business day.</p>
                     </div>
                     <div className="row">
                       <Link to="/pricing" className="btn btn--on-dark btn--lg">See pricing</Link>

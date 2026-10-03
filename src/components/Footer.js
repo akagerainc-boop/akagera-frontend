@@ -22,8 +22,8 @@ export default function Footer() {
           <div className="footer__brandcol">
             <div className="nav__brand" style={{ color: '#fff' }}><span style={{ fontSize: '1.2rem' }}>Akagera<b style={{ color: 'var(--brand)' }}>Inc</b></span></div>
             <p className="mt-2" style={{ maxWidth: 320, color: 'rgba(255,255,255,.66)', fontSize: '.9rem' }}>
-              {settings?.brand?.tagline || 'Technology solutions built for what comes next.'} We build software across
-              mobile, web, desktop, and cloud.
+              {settings?.brand?.tagline || 'Technology solutions built for what comes next.'} We build Android apps
+              you can download right here.
             </p>
             <div className="footer__social mt-3">
               {Object.entries(social).map(([key, url]) => {

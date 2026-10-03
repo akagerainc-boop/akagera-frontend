@@ -6,7 +6,7 @@ import SmartImage from '../components/SmartImage';
 import { PageLoader } from '../components/Loader';
 import { EmptyState, Modal } from '../components/ui';
 import { mobileAppAPI, mediaUrl } from '../api';
-import { AppIcon } from './MobileApps';
+import { AppIcon } from '../components/AppCard';
 
 const isIOS = () => /iPhone|iPad|iPod/i.test(navigator.userAgent || '');
 
@@ -115,6 +115,17 @@ export default function MobileAppDetail() {
           </aside>
         </div>
       </section>
+
+      {dl && (
+        <div className="dl-bar">
+          <AppIcon app={app} size={40} />
+          <div style={{ minWidth: 0, flex: 1 }}>
+            <b className="dl-bar__name">{app.name}</b>
+            <span className="dl-bar__meta">{[app.version && `v${app.version}`, app.apk_size_label].filter(Boolean).join(' · ')}</span>
+          </div>
+          <a href={dl} className="btn btn--primary" rel="nofollow"><Download size={16} /> Download</a>
+        </div>
+      )}
 
       <Modal open={shot !== null} onClose={() => setShot(null)} title={`${app.name} · ${shot !== null ? shot + 1 : ''} / ${shots.length}`}>
         {shot !== null && (

@@ -393,12 +393,81 @@ table.data tr:last-child td { border-bottom: none; }
 
 /* ---------------- mobile apps ---------------- */
 .app-icon { border: 1px solid var(--line); box-shadow: var(--shadow-1); }
-.app-card { display: flex; flex-direction: column; }
+.app-card {
+  display: flex; flex-direction: column; background: var(--paper); border: 1px solid var(--line);
+  border-radius: var(--r-lg); padding: 20px; transition: box-shadow .18s var(--ease), border-color .18s var(--ease);
+}
+.app-card:hover { box-shadow: var(--shadow-2); border-color: var(--n-300); }
 .app-card__head { display: flex; gap: 14px; align-items: center; color: var(--ink); }
-.app-card__name { font-size: 1.15rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.app-card__head:hover { color: var(--ink); }
+.app-card__name { font-size: 1.12rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.app-card__meta { font-size: .82rem; color: var(--n-500); margin-top: 2px; }
+.app-card__chev { color: var(--n-400); flex-shrink: 0; }
+.app-card__tagline {
+  margin-top: 12px; font-size: .93rem; display: -webkit-box; -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical; overflow: hidden;
+}
 .app-card__shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; }
 .app-card__shots .smart-img { border-radius: var(--r-md); border: 1px solid var(--line); }
-.app-card .between { margin-top: auto; padding-top: 20px; }
+.app-card__actions { display: grid; grid-template-columns: 1fr auto; gap: 10px; margin-top: auto; padding-top: 18px; }
+.btn--soft { background: var(--n-100); color: var(--ink); }
+.btn--soft:hover:not(:disabled) { background: var(--n-200); color: var(--ink); }
+
+/* home hero: apps first */
+.apps-hero { background: radial-gradient(120% 90% at 100% 0%, rgba(189, 74, 57, .35) 0%, rgba(20, 20, 20, 0) 60%), var(--ink); color: #fff; }
+.apps-hero__grid { display: grid; gap: 32px; padding-top: clamp(36px, 7vw, 88px); padding-bottom: clamp(36px, 7vw, 88px); align-items: center; }
+.apps-hero h1 { color: #fff; font-size: clamp(2rem, 5.4vw, 3.3rem); margin-top: 16px; max-width: 14ch; }
+.apps-hero .lead { color: rgba(255, 255, 255, .8); margin-top: 14px; max-width: 46ch; }
+.apps-hero__trust { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 10px 20px; margin-top: 24px; font-size: .88rem; color: rgba(255, 255, 255, .75); }
+.apps-hero__trust li { display: inline-flex; align-items: center; gap: 6px; }
+.apps-hero__trust svg { color: #E8907F; }
+.hero-app { background: var(--paper); color: var(--ink); border-radius: 20px; padding: 22px; box-shadow: 0 24px 60px rgba(0, 0, 0, .35); }
+.hero-app__label { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brand); }
+.hero-app__head { display: flex; gap: 14px; align-items: center; margin-top: 12px; color: var(--ink); }
+.hero-app__head:hover { color: var(--ink); }
+.hero-app__head h3 { font-size: 1.3rem; }
+.hero-app__meta { font-size: .84rem; color: var(--n-500); margin-top: 2px; }
+.hero-app__tagline { margin-top: 12px; font-size: .95rem; }
+.hero-app__shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 16px 0 18px; }
+.hero-app__shots img { width: 100%; aspect-ratio: 9 / 16; object-fit: cover; border-radius: var(--r-md); border: 1px solid var(--line); background: var(--n-100); }
+@media (min-width: 900px) {
+  .apps-hero__grid { grid-template-columns: 1.15fr .85fr; gap: 56px; }
+  .hero-app { max-width: 400px; justify-self: end; width: 100%; }
+}
+
+/* install steps */
+.steps { list-style: none; padding: 0; display: grid; gap: 16px; grid-template-columns: 1fr; }
+.steps li { display: flex; gap: 14px; align-items: flex-start; background: var(--paper); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 18px; }
+.steps li p { font-size: .92rem; margin-top: 2px; }
+.steps__n { width: 40px; height: 40px; border-radius: 12px; background: var(--brand-050); color: var(--brand); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+@media (min-width: 800px) { .steps { grid-template-columns: repeat(3, 1fr); } }
+
+/* nav: apps link + mobile shortcut */
+.nav__link--apps { color: var(--brand-700); }
+.nav__link--apps:hover, .nav__link--apps.is-active { background: var(--brand-050); color: var(--brand-700); }
+.nav__apps-mobile { margin-left: auto; }
+.nav__apps-mobile + .nav__burger { margin-left: 4px; }
+@media (min-width: 1080px) { .nav__apps-mobile { display: none; } }
+.drawer__apps { display: flex; align-items: center; gap: 12px; margin: 8px 0 6px; padding: 14px; border-radius: var(--r-md); background: var(--brand-050); color: var(--brand-700); }
+.drawer__apps:hover { color: var(--brand-700); background: var(--brand-100); }
+.drawer__apps span { display: flex; flex-direction: column; line-height: 1.3; }
+.drawer__apps small { color: var(--n-600); font-size: .8rem; }
+
+/* app detail: sticky download bar on phones */
+.dl-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 850; display: flex; align-items: center; gap: 12px;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); background: rgba(255, 255, 255, .96);
+  backdrop-filter: blur(8px); border-top: 1px solid var(--line); box-shadow: 0 -4px 20px rgba(20, 20, 20, .08);
+}
+.dl-bar__name { display: block; font-size: .95rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dl-bar__meta { display: block; font-size: .78rem; color: var(--n-500); }
+body:has(.dl-bar) .whatsapp-fab { bottom: 84px; }
+body:has(.dl-bar) .footer { padding-bottom: 96px; }
+@media (min-width: 900px) {
+  .dl-bar { display: none; }
+  body:has(.dl-bar) .whatsapp-fab { bottom: 24px; }
+  body:has(.dl-bar) .footer { padding-bottom: 28px; }
+}
 .app-search { display: flex; align-items: center; gap: 8px; max-width: 420px; margin-top: 8px; padding: 0 14px; border-radius: var(--r-md); background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .24); color: rgba(255, 255, 255, .7); }
 .app-search input { flex: 1; min-width: 0; background: transparent; border: 0; outline: 0; color: #fff; padding: 11px 0; font: inherit; }
 .app-hero { display: flex; gap: 22px; align-items: flex-start; flex-wrap: wrap; }

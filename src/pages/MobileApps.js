@@ -1,48 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Smartphone, Download, Search, ArrowRight } from 'lucide-react';
+import { Smartphone, Search, Download, ShieldCheck } from 'lucide-react';
 import Seo from '../components/Seo';
-import SmartImage from '../components/SmartImage';
+import { MobileAppCard } from '../components/AppCard';
 import { PageLoader } from '../components/Loader';
 import { SectionHead, EmptyState, Breadcrumbs } from '../components/ui';
 import { mobileAppAPI } from '../api';
-
-export function AppIcon({ app, size = 64 }) {
-  return (
-    <SmartImage src={app.icon} alt={app.name} className="app-icon"
-      style={{ width: size, height: size, borderRadius: size * 0.22, flexShrink: 0 }} />
-  );
-}
-
-function MobileAppCard({ app }) {
-  return (
-    <article className="card card--hover app-card">
-      <Link to={`/mobile-apps/${app.slug}`} className="app-card__head">
-        <AppIcon app={app} />
-        <div style={{ minWidth: 0 }}>
-          <h3 className="app-card__name">{app.name}</h3>
-          <div className="muted" style={{ fontSize: '.82rem' }}>
-            {[app.category, app.version && `v${app.version}`, app.apk_size_label].filter(Boolean).join(' · ')}
-          </div>
-        </div>
-      </Link>
-      {app.tagline && <p className="mt-2" style={{ fontSize: '.92rem' }}>{app.tagline}</p>}
-      {app.screenshots?.length > 0 && (
-        <Link to={`/mobile-apps/${app.slug}`} className="app-card__shots" aria-label={`${app.name} screenshots`}>
-          {app.screenshots.slice(0, 3).map((s, i) => <SmartImage key={i} src={s} alt="" ratio="9 / 16" />)}
-        </Link>
-      )}
-      <div className="between mt-3">
-        <Link to={`/mobile-apps/${app.slug}`} className="btn btn--ghost btn--sm" style={{ paddingLeft: 0 }}>
-          Details <ArrowRight size={15} />
-        </Link>
-        <a href={mobileAppAPI.downloadUrl(app.slug)} className="btn btn--primary btn--sm" rel="nofollow">
-          <Download size={15} /> Download APK
-        </a>
-      </div>
-    </article>
-  );
-}
 
 export default function MobileApps() {
   const [apps, setApps] = useState(null);
@@ -65,8 +27,8 @@ export default function MobileApps() {
       <section className="section section--dark section--tight">
         <div className="container">
           <Breadcrumbs items={[{ label: 'Home', to: '/' }, { label: 'Mobile Apps' }]} />
-          <SectionHead eyebrow="Android apps" title="Mobile Apps">
-            Browse our Android apps, see screenshots and details, and download the APK straight to your phone.
+          <SectionHead eyebrow="Android apps" title="Our Apps">
+            Free Android apps by Akagera Inc. See screenshots and details, then download the APK straight to your phone.
           </SectionHead>
           {apps?.length > 3 && (
             <div className="app-search">
@@ -90,6 +52,19 @@ export default function MobileApps() {
           )}
         </div>
       </section>
+
+      {shown?.length > 0 && (
+        <section className="section section--tight section--soft">
+          <div className="container">
+            <SectionHead eyebrow="Easy install" title="How to install an APK" />
+            <ol className="steps">
+              <li><span className="steps__n"><Download size={18} /></span><div><b>Download</b><p>Tap <b>Download APK</b> on your Android phone. If your browser warns, choose <b>Download anyway</b>.</p></div></li>
+              <li><span className="steps__n"><Search size={18} /></span><div><b>Open the file</b><p>Find it in your notifications or the Downloads folder.</p></div></li>
+              <li><span className="steps__n"><ShieldCheck size={18} /></span><div><b>Install</b><p>Allow <b>Install unknown apps</b> if asked (Settings → Apps → Special access), then tap Install.</p></div></li>
+            </ol>
+          </div>
+        </section>
+      )}
     </>
   );
 }
