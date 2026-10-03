@@ -4,6 +4,7 @@ import {
   ArrowRight, Download, ShieldCheck, Smartphone, MapPin, Quote, Search, BadgeCheck, Zap,
 } from 'lucide-react';
 import Seo from '../components/Seo';
+import Carousel from '../components/Carousel';
 import Reveal from '../components/Reveal';
 import Parallax from '../components/Parallax';
 import { ProductCard, ServiceCard, BlogCard } from '../components/cards';
@@ -80,6 +81,9 @@ export default function Home() {
 
       {/* HERO — apps first */}
       <header className="apps-hero">
+        {/* background slider: images uploaded in Admin → Media (page type "home") */}
+        <div className="apps-hero__bg"><Carousel pageType="home" /></div>
+        <div className="apps-hero__scrim" />
         <div className="container apps-hero__grid">
           <div className="apps-hero__copy">
             <span className="pill pill--on-dark"><Smartphone size={13} /> Android apps</span>
