@@ -17,7 +17,7 @@ const STYLES = `
  * Full-bleed background carousel driven by admin-managed images (by page_type).
  * Falls back to a solid brand backdrop when there are no images.
  */
-export default function Carousel({ pageType = 'home', interval = 6000, images: propImages }) {
+export default function Carousel({ pageType = 'home', interval = 6000, images: propImages, quiet = false }) {
   const [images, setImages] = useState(propImages || []);
   const [idx, setIdx] = useState(0);
   const [loading, setLoading] = useState(!propImages);
@@ -39,6 +39,7 @@ export default function Carousel({ pageType = 'home', interval = 6000, images: p
     return () => clearInterval(timer.current);
   }, [images.length, interval]);
 
+  if (loading && quiet) return <div className="akg-carousel" />;
   if (loading) {
     return (
       <div className="akg-carousel" style={{ background: 'var(--ink)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>

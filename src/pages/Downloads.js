@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams, Link } from 'react-router-dom';
 import { DownloadCloud, Smartphone, Monitor, Command, Globe } from 'lucide-react';
 import Seo from '../components/Seo';
+import PageHero from '../components/PageHero';
 import { PageLoader } from '../components/Loader';
 import { DownloadCard } from '../components/cards';
 import { SectionHead, EmptyState, Breadcrumbs } from '../components/ui';
@@ -45,8 +46,7 @@ export default function Downloads() {
   return (
     <>
       <Seo title="Downloads" description="Download Akagera Inc apps for Android, iOS, Windows, and macOS." />
-      <section className="section section--dark section--tight">
-        <div className="container">
+      <PageHero pageType="downloads">
           <Breadcrumbs items={[{ label: 'Home', to: '/' }, { label: 'Downloads' }]} />
           <SectionHead eyebrow="Download center" title={product ? `Download ${product.name}` : 'Software releases'}>
             {suggested && !slug ? `We detected ${PLATS.find((p) => p.key === suggested)?.label} — showing everything, your platform first.` : 'Choose your platform to get the latest release.'}
@@ -61,8 +61,7 @@ export default function Downloads() {
               ))}
             </div>
           )}
-        </div>
-      </section>
+      </PageHero>
 
       <section className="section">
         <div className="container">

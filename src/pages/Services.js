@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Wrench } from 'lucide-react';
 import Seo from '../components/Seo';
+import PageHero from '../components/PageHero';
 import { PageLoader } from '../components/Loader';
 import { ServiceCard } from '../components/cards';
 import { SectionHead, EmptyState, Breadcrumbs } from '../components/ui';
@@ -24,20 +25,18 @@ export default function Services() {
   return (
     <>
       <Seo title="Services" description="Buy software development, licensing, subscriptions, internships, and support from Akagera Inc." />
-      <section className="section section--soft section--tight">
-        <div className="container">
+      <PageHero pageType="services">
           <Breadcrumbs items={[{ label: 'Home', to: '/' }, { label: 'Services' }]} />
           <SectionHead eyebrow="Services marketplace" title="Choose the solution that fits your needs">
             Every service has a clear price and duration. Purchase online and track delivery from your dashboard.
           </SectionHead>
           <div className="chip-row">
-            <button className="pill" style={!category ? { background: 'var(--brand)', color: '#fff', borderColor: 'var(--brand)' } : {}} onClick={() => setParams({})}>All</button>
+            <button className={`pill ${!category ? 'pill--active' : 'pill--on-dark'}`} onClick={() => setParams({})}>All</button>
             {cats.map((c) => (
-              <button key={c} className="pill" style={category === c ? { background: 'var(--brand)', color: '#fff', borderColor: 'var(--brand)' } : {}} onClick={() => setParams({ category: c })}>{c}</button>
+              <button key={c} className={`pill ${category === c ? 'pill--active' : 'pill--on-dark'}`} onClick={() => setParams({ category: c })}>{c}</button>
             ))}
           </div>
-        </div>
-      </section>
+      </PageHero>
 
       <section className="section">
         <div className="container">

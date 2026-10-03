@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Target, Eye, Heart, Cpu, Workflow, Award, Globe2 } from 'lucide-react';
 import Seo from '../components/Seo';
+import PageHero from '../components/PageHero';
 import { SectionHead } from '../components/ui';
 import { useSite } from '../components/SiteContext';
 
@@ -19,16 +20,15 @@ export default function About() {
   return (
     <>
       <Seo title="About" description="Akagera Inc is a software solutions company focused on useful, scalable, and reliable technology." />
-      <section className="hero" style={{ minHeight: 'auto' }}>
-        <div className="hero__scrim" style={{ background: 'linear-gradient(120deg, #171717, #4a1a12)' }} />
-        <div className="container"><div className="hero__inner" style={{ paddingTop: 90, paddingBottom: 70 }}>
+      <PageHero pageType="about" className="page-hero--tall">
+        <div style={{ maxWidth: 780 }}>
           <span className="eyebrow" style={{ color: '#fff', opacity: .8 }}>About Akagera Inc</span>
           <h1>We build software that organizations can trust.</h1>
           <p className="lead mt-2" style={{ color: 'rgba(255,255,255,.85)' }}>
             {c.who_we_are || 'Akagera Inc is a technology and software solutions company. We design, build, and maintain software across mobile, web, desktop, and cloud.'}
           </p>
-        </div></div>
-      </section>
+        </div>
+      </PageHero>
 
       <section className="section">
         <div className="container">

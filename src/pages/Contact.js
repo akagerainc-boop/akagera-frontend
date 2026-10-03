@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Mail, Phone, MapPin, MessageCircle, CheckCircle2 } from 'lucide-react';
 import Seo from '../components/Seo';
+import PageHero from '../components/PageHero';
 import { SectionHead, Breadcrumbs } from '../components/ui';
 import { IosSpinner } from '../components/Loader';
 import { useSite } from '../components/SiteContext';
@@ -35,10 +36,10 @@ export default function Contact() {
   return (
     <>
       <Seo title="Contact" description="Get in touch with Akagera Inc." />
-      <section className="section section--soft section--tight"><div className="container">
+      <PageHero pageType="contact">
         <Breadcrumbs items={[{ label: 'Home', to: '/' }, { label: 'Contact' }]} />
         <SectionHead eyebrow="Contact" title="Let's talk">Tell us what you're building — we usually respond within one business day.</SectionHead>
-      </div></section>
+      </PageHero>
 
       <section className="section"><div className="container grid grid-2" style={{ alignItems: 'start' }}>
         {state === 'done' ? (

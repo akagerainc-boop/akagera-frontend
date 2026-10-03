@@ -413,6 +413,19 @@ table.data tr:last-child td { border-bottom: none; }
 .btn--soft { background: var(--n-100); color: var(--ink); }
 .btn--soft:hover:not(:disabled) { background: var(--n-200); color: var(--ink); }
 
+/* page header with admin-managed background slider */
+.page-hero { position: relative; overflow: hidden; background: var(--ink); }
+.page-hero__bg { position: absolute; inset: 0; z-index: 0; }
+.page-hero__bg img { opacity: .4; }
+.page-hero__bg .akg-carousel__dots { display: none; }
+.page-hero__scrim { position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(105deg, rgba(20,20,20,.9) 0%, rgba(20,20,20,.6) 60%, rgba(189,74,57,.3) 100%); }
+.page-hero__inner { position: relative; z-index: 2; }
+.page-hero--tall { padding: clamp(64px, 10vw, 110px) 0 clamp(48px, 8vw, 80px); }
+.page-hero .breadcrumbs, .page-hero .breadcrumbs a { color: rgba(255, 255, 255, .65); }
+.page-hero .breadcrumbs a:hover { color: #fff; }
+.page-hero .eyebrow { color: #E8907F; }
+.pill--active { background: var(--brand); border-color: var(--brand); color: #fff; }
+
 /* home hero: apps first */
 .apps-hero { background: radial-gradient(120% 90% at 100% 0%, rgba(189, 74, 57, .35) 0%, rgba(20, 20, 20, 0) 60%), var(--ink); color: #fff; }
 .apps-hero { position: relative; overflow: hidden; }

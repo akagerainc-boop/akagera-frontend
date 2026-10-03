@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { PackageOpen } from 'lucide-react';
 import Seo from '../components/Seo';
+import PageHero from '../components/PageHero';
 import { PageLoader } from '../components/Loader';
 import { ProductCard } from '../components/cards';
 import { SectionHead, EmptyState, Breadcrumbs } from '../components/ui';
@@ -35,25 +36,23 @@ export default function Products() {
   return (
     <>
       <Seo title="Products" description="Software products built by Akagera Inc across mobile, web, Windows, macOS, and cloud." />
-      <section className="section section--soft section--tight">
-        <div className="container">
+      <PageHero pageType="products">
           <Breadcrumbs items={[{ label: 'Home', to: '/' }, { label: 'Products' }]} />
           <SectionHead eyebrow="Products" title="Software built by Akagera Inc">
             Explore apps, platforms, and tools we build and maintain.
           </SectionHead>
           <div className="chip-row">
-            <button className={`pill ${!category ? 'badge--ink' : ''}`} style={!category ? { color: '#fff', border: 'none' } : {}} onClick={() => setFilter('category', '')}>All</button>
+            <button className={`pill ${!category ? 'pill--active' : 'pill--on-dark'}`} onClick={() => setFilter('category', '')}>All</button>
             {cats.map((c) => (
-              <button key={c} className="pill" style={category === c ? { background: 'var(--brand)', color: '#fff', borderColor: 'var(--brand)' } : {}} onClick={() => setFilter('category', c)}>{c}</button>
+              <button key={c} className={`pill ${category === c ? 'pill--active' : 'pill--on-dark'}`} onClick={() => setFilter('category', c)}>{c}</button>
             ))}
           </div>
           <div className="chip-row mt-2">
             {PLATFORMS.map((p) => (
-              <button key={p} className="pill" style={platform === p ? { background: 'var(--ink)', color: '#fff' } : {}} onClick={() => setFilter('platform', platform === p ? '' : p)}>{p}</button>
+              <button key={p} className={`pill ${platform === p ? 'pill--active' : 'pill--on-dark'}`} onClick={() => setFilter('platform', platform === p ? '' : p)}>{p}</button>
             ))}
           </div>
-        </div>
-      </section>
+      </PageHero>
 
       <section className="section">
         <div className="container">
