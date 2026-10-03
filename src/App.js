@@ -14,6 +14,8 @@ const Home = lazy(() => import('./pages/Home'));
 const Products = lazy(() => import('./pages/Products'));
 const ProductDetail = lazy(() => import('./pages/ProductDetail'));
 const Downloads = lazy(() => import('./pages/Downloads'));
+const MobileApps = lazy(() => import('./pages/MobileApps'));
+const MobileAppDetail = lazy(() => import('./pages/MobileAppDetail'));
 const Services = lazy(() => import('./pages/Services'));
 const ServiceDetail = lazy(() => import('./pages/ServiceDetail'));
 const Pricing = lazy(() => import('./pages/Pricing'));
@@ -86,6 +88,8 @@ function Shell() {
             <Route path="/products/:slug" element={<ProductDetail />} />
             <Route path="/downloads" element={<Downloads />} />
             <Route path="/downloads/:slug" element={<Downloads />} />
+            <Route path="/mobile-apps" element={<MobileApps />} />
+            <Route path="/mobile-apps/:slug" element={<MobileAppDetail />} />
             <Route path="/services" element={<Services />} />
             <Route path="/services/:slug" element={<ServiceDetail />} />
             <Route path="/pricing" element={<Pricing />} />

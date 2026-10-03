@@ -390,3 +390,27 @@ table.data tr:last-child td { border-bottom: none; }
 @media (min-width: 700px) { .hide-mobile { display: initial; } }
 .divider { height: 1px; background: var(--line); margin: 32px 0; }
 .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* ---------------- mobile apps ---------------- */
+.app-icon { border: 1px solid var(--line); box-shadow: var(--shadow-1); }
+.app-card { display: flex; flex-direction: column; }
+.app-card__head { display: flex; gap: 14px; align-items: center; color: var(--ink); }
+.app-card__name { font-size: 1.15rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.app-card__shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; }
+.app-card__shots .smart-img { border-radius: var(--r-md); border: 1px solid var(--line); }
+.app-card .between { margin-top: auto; padding-top: 20px; }
+.app-search { display: flex; align-items: center; gap: 8px; max-width: 420px; margin-top: 8px; padding: 0 14px; border-radius: var(--r-md); background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .24); color: rgba(255, 255, 255, .7); }
+.app-search input { flex: 1; min-width: 0; background: transparent; border: 0; outline: 0; color: #fff; padding: 11px 0; font: inherit; }
+.app-hero { display: flex; gap: 22px; align-items: flex-start; flex-wrap: wrap; }
+.shots-strip { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px; -webkit-overflow-scrolling: touch; }
+.shots-strip__item { flex: 0 0 auto; width: clamp(150px, 42vw, 220px); scroll-snap-align: start; padding: 0; border: 0; background: none; cursor: zoom-in; }
+.shots-strip__item .smart-img { border-radius: var(--r-lg); border: 1px solid var(--line); box-shadow: var(--shadow-1); }
+.install-steps { padding-left: 20px; display: flex; flex-direction: column; gap: 8px; }
+.lightbox img { display: block; max-width: 100%; max-height: 72vh; margin: 0 auto; border-radius: var(--r-md); }
+.shot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 10px; }
+.shot-grid__item { position: relative; aspect-ratio: 9 / 16; border-radius: var(--r-md); overflow: hidden; border: 1px solid var(--line); background: var(--n-100); }
+.shot-grid__item img { width: 100%; height: 100%; object-fit: cover; }
+.shot-grid__actions { position: absolute; inset: auto 0 0 0; display: flex; justify-content: space-between; padding: 4px; background: linear-gradient(transparent, rgba(0, 0, 0, .55)); }
+.shot-grid__actions button { color: #fff; padding: 2px 4px; }
+.upload-bar { height: 6px; border-radius: 3px; background: var(--n-200); overflow: hidden; }
+.upload-bar > span { display: block; height: 100%; background: var(--brand); transition: width .2s; }

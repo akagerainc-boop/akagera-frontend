@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Package, Wrench, ShoppingBag, Users, KeyRound,
   Download, Newspaper, GraduationCap, Briefcase, LifeBuoy, Image as ImageIcon,
   Navigation as NavIcon, Settings as SettingsIcon, ScrollText, LogOut, Plus, Trash2, Pencil, X,
-  FileText, Mail, Phone, ExternalLink,
+  FileText, Mail, Phone, ExternalLink, Smartphone,
 } from 'lucide-react';
 import Seo from '../components/Seo';
 import { PageLoader, IosSpinner } from '../components/Loader';
@@ -612,6 +612,237 @@ function AuditAdmin() {
   );
 }
 
+/* ---------- mobile apps (icon + screenshots + APK) ---------- */
+const MIN_SHOTS = 3;
+const EMPTY_APP = {
+  name: '', tagline: '', category: '', version: '', min_android: '', description: '', whats_new: '',
+  icon: '', screenshots: [], apk_url: '', is_published: true, sort_order: 0,
+};
+
+function MobileAppsAdmin() {
+  const [rows, setRows] = useState(null);
+  const [editing, setEditing] = useState(null);
+  const [apkFile, setApkFile] = useState(null);
+  const [busy, setBusy] = useState('');       // '' | 'icon' | 'shots' | 'save'
+  const [progress, setProgress] = useState(null);
+  const [err, setErr] = useState(null);
+
+  const load = useCallback(() => {
+    adminAPI.mobileApps().then((r) => setRows(r.data || [])).catch(() => setRows([]));
+  }, []);
+  useEffect(() => { load(); }, [load]);
+
+  const open = (row) => {
+    setErr(null); setApkFile(null); setProgress(null);
+    setEditing(row ? { ...EMPTY_APP, ...row, screenshots: row.screenshots || [], apk_url: row.apk_url || '' } : { ...EMPTY_APP });
+  };
+  const set = (k, v) => setEditing((e) => ({ ...e, [k]: v }));
+
+  const uploadImage = async (file, folder) => {
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('folder', folder);
+    const { data } = await adminAPI.upload(fd);
+    return data.path || data.url;
+  };
+
+  const onIcon = async (file) => {
+    setBusy('icon'); setErr(null);
+    try { set('icon', await uploadImage(file, 'icons')); } catch (e) { setErr(errText(e)); } finally { setBusy(''); }
+  };
+
+  const onShots = async (files) => {
+    setBusy('shots'); setErr(null);
+    try {
+      for (const f of Array.from(files)) {
+        const url = await uploadImage(f, 'screenshots');
+        setEditing((e) => ({ ...e, screenshots: [...e.screenshots, url] }));
+      }
+    } catch (e) { setErr(errText(e)); } finally { setBusy(''); }
+  };
+
+  const moveShot = (i, d) => setEditing((e) => {
+    const s = [...e.screenshots];
+    const j = i + d;
+    if (j < 0 || j >= s.length) return e;
+    [s[i], s[j]] = [s[j], s[i]];
+    return { ...e, screenshots: s };
+  });
+
+  const save = async () => {
+    const e = editing;
+    const apkUrl = (e.apk_url || '').trim();
+    const hasApk = !!(apkFile || e.has_apk || apkUrl);
+    const problem = !e.name.trim() ? 'App name is required.'
+      : !e.icon ? 'Upload an app icon.'
+        : e.screenshots.length < MIN_SHOTS ? `Upload at least ${MIN_SHOTS} screenshots (${e.screenshots.length} so far).`
+          : !(e.description || '').trim() ? 'Add an app description.'
+            : e.is_published && !hasApk ? 'Choose an APK file (or paste a download link) before publishing.'
+              : null;
+    if (problem) { setErr(problem); return; }
+
+    setBusy('save'); setErr(null);
+    const wantPublished = e.is_published;
+    // The server refuses to publish without an APK, so publish only after a pending upload lands.
+    const publishNow = wantPublished && !(apkFile && !e.has_apk && !apkUrl);
+    const payload = {
+      name: e.name, tagline: e.tagline, category: e.category, version: e.version, min_android: e.min_android,
+      description: e.description, whats_new: e.whats_new, icon: e.icon, screenshots: e.screenshots,
+      apk_url: apkUrl, sort_order: Number(e.sort_order) || 0, is_published: publishNow,
+    };
+    try {
+      const { data: savedRow } = e.id ? await adminAPI.updateMobileApp(e.id, payload) : await adminAPI.createMobileApp(payload);
+      setEditing((cur) => ({ ...cur, id: savedRow.id, has_apk: savedRow.has_apk }));
+      if (apkFile) {
+        const fd = new FormData();
+        fd.append('file', apkFile);
+        setProgress(0);
+        await adminAPI.uploadApk(savedRow.id, fd, (ev) => ev.total && setProgress(Math.round((ev.loaded / ev.total) * 100)));
+        setApkFile(null);
+        if (wantPublished && !publishNow) await adminAPI.updateMobileApp(savedRow.id, { is_published: true });
+      }
+      setEditing(null);
+      load();
+    } catch (e2) {
+      setErr(errText(e2));
+      load();
+    } finally { setBusy(''); setProgress(null); }
+  };
+
+  const remove = async (row) => {
+    if (!window.confirm(`Delete "${row.name}" and its APK?`)) return;
+    await adminAPI.deleteMobileApp(row.id);
+    load();
+  };
+
+  const togglePublish = async (row) => {
+    try { await adminAPI.updateMobileApp(row.id, { is_published: !row.is_published }); load(); } catch (e) { window.alert(errText(e)); }
+  };
+
+  if (!rows) return <PageLoader />;
+  const e = editing;
+
+  return (
+    <>
+      <div className="between mb-3">
+        <h1>Mobile apps</h1>
+        <button className="btn btn--primary btn--sm" onClick={() => open(null)}><Plus size={15} /> New app</button>
+      </div>
+
+      {rows.length === 0 ? (
+        <EmptyState icon={<Smartphone size={24} />} title="No mobile apps yet"
+          action={<button className="btn btn--primary" onClick={() => open(null)}>Add your first app</button>}>
+          Apps you add here appear on the public Mobile Apps page with screenshots and an APK download.
+        </EmptyState>
+      ) : (
+        <div className="table-wrap">
+          <table className="data">
+            <thead><tr><th /><th>Name</th><th>Version</th><th>APK</th><th>Downloads</th><th>Status</th><th /></tr></thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr key={r.id}>
+                  <td>{r.icon ? <img src={mediaUrl(r.icon)} alt="" style={{ width: 36, height: 36, borderRadius: 8, objectFit: 'cover' }} /> : null}</td>
+                  <td><b>{r.name}</b><div className="muted" style={{ fontSize: '.78rem' }}>/mobile-apps/{r.slug}</div></td>
+                  <td>{r.version || '—'}</td>
+                  <td>{r.apk_file_id ? (r.apk_size_label || 'uploaded') : r.apk_url ? 'external link' : <span style={{ color: 'var(--err)' }}>missing</span>}</td>
+                  <td>{r.download_count || 0}</td>
+                  <td><button className="btn btn--ghost btn--sm" onClick={() => togglePublish(r)} title="Toggle published"><StatusBadge status={r.is_published ? 'published' : 'draft'} /></button></td>
+                  <td>
+                    <div className="row" style={{ gap: 6, flexWrap: 'nowrap' }}>
+                      {r.is_published && <a className="btn btn--ghost btn--sm" href={`/mobile-apps/${r.slug}`} target="_blank" rel="noopener noreferrer" title="View"><ExternalLink size={14} /></a>}
+                      <button className="btn btn--ghost btn--sm" onClick={() => open(r)} title="Edit"><Pencil size={14} /></button>
+                      <button className="btn btn--ghost btn--sm" style={{ color: 'var(--err)' }} onClick={() => remove(r)} title="Delete"><Trash2 size={14} /></button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      <Modal open={!!e} onClose={() => !busy && setEditing(null)} title={e?.id ? `Edit ${e.name}` : 'New mobile app'}>
+        {e && (
+          <div>
+            <div className="field"><label>App name *</label><input value={e.name} onChange={(ev) => set('name', ev.target.value)} /></div>
+            <div className="field"><label>Short tagline</label><input value={e.tagline || ''} maxLength={255} onChange={(ev) => set('tagline', ev.target.value)} placeholder="One line shown on the app card" /></div>
+
+            <div className="field">
+              <label>App icon * <span className="hint">square PNG/JPG, 512×512 recommended</span></label>
+              <div className="row" style={{ gap: 12 }}>
+                {e.icon && <img src={mediaUrl(e.icon)} alt="" style={{ width: 64, height: 64, objectFit: 'cover', borderRadius: 14, border: '1px solid var(--line)' }} />}
+                <input type="file" accept="image/*" disabled={!!busy} onChange={(ev) => ev.target.files[0] && onIcon(ev.target.files[0])} />
+                {busy === 'icon' && <IosSpinner size="sm" />}
+              </div>
+            </div>
+
+            <div className="field">
+              <label>Screenshots * <span className="hint">at least {MIN_SHOTS} · {e.screenshots.length} added</span></label>
+              {e.screenshots.length > 0 && (
+                <div className="shot-grid mb-1">
+                  {e.screenshots.map((s, i) => (
+                    <div className="shot-grid__item" key={s + i}>
+                      <img src={mediaUrl(s)} alt={`Screenshot ${i + 1}`} />
+                      <div className="shot-grid__actions">
+                        <button type="button" onClick={() => moveShot(i, -1)} aria-label="Move left">‹</button>
+                        <button type="button" onClick={() => set('screenshots', e.screenshots.filter((_, j) => j !== i))} aria-label="Remove"><X size={13} /></button>
+                        <button type="button" onClick={() => moveShot(i, 1)} aria-label="Move right">›</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div className="row" style={{ gap: 10 }}>
+                <input type="file" accept="image/*" multiple disabled={!!busy} onChange={(ev) => { if (ev.target.files.length) onShots(ev.target.files); ev.target.value = ''; }} />
+                {busy === 'shots' && <IosSpinner size="sm" />}
+              </div>
+            </div>
+
+            <div className="field"><label>Description *</label><textarea value={e.description || ''} onChange={(ev) => set('description', ev.target.value)} placeholder="What the app does, key features…" /></div>
+            <div className="field"><label>What&apos;s new <span className="hint">optional release notes</span></label><textarea value={e.whats_new || ''} style={{ minHeight: 70 }} onChange={(ev) => set('whats_new', ev.target.value)} /></div>
+
+            <div className="grid grid-2" style={{ gap: 12 }}>
+              <div className="field"><label>Version</label><input value={e.version || ''} onChange={(ev) => set('version', ev.target.value)} placeholder="1.0.0" /></div>
+              <div className="field"><label>Category</label><input value={e.category || ''} onChange={(ev) => set('category', ev.target.value)} placeholder="Finance, Education…" /></div>
+              <div className="field"><label>Minimum Android</label><input value={e.min_android || ''} onChange={(ev) => set('min_android', ev.target.value)} placeholder="Android 8.0+" /></div>
+              <div className="field"><label>Sort order</label><input type="number" value={e.sort_order ?? 0} onChange={(ev) => set('sort_order', ev.target.value)} /></div>
+            </div>
+
+            <div className="field">
+              <label>APK file {e.is_published ? '*' : ''}</label>
+              {e.apk_filename && !apkFile && <div className="muted" style={{ fontSize: '.85rem' }}>Current: {e.apk_filename} ({e.apk_size_label || 'uploaded'}) — choose a file to replace it</div>}
+              <input type="file" accept=".apk,application/vnd.android.package-archive" disabled={!!busy}
+                onChange={(ev) => setApkFile(ev.target.files[0] || null)} />
+              {apkFile && <div className="muted" style={{ fontSize: '.85rem' }}>{apkFile.name} · {(apkFile.size / 1048576).toFixed(1)} MB — uploads when you save</div>}
+              {progress !== null && (
+                <div className="mt-1">
+                  <div className="upload-bar"><span style={{ width: `${progress}%` }} /></div>
+                  <div className="muted" style={{ fontSize: '.8rem' }}>{progress < 100 ? `Uploading APK… ${progress}%` : 'Saving APK on the server…'}</div>
+                </div>
+              )}
+            </div>
+            <div className="field">
+              <label>…or external download link <span className="hint">used only when no APK file is uploaded</span></label>
+              <input value={e.apk_url || ''} onChange={(ev) => set('apk_url', ev.target.value)} placeholder="https://github.com/…/releases/download/…/app.apk" />
+            </div>
+
+            <label className="row" style={{ gap: 8, marginBottom: 16 }}>
+              <input type="checkbox" checked={!!e.is_published} onChange={(ev) => set('is_published', ev.target.checked)} />
+              <span>Published (visible on the Mobile Apps page)</span>
+            </label>
+
+            {err && <p style={{ color: 'var(--err)', fontSize: '.85rem' }}>{err}</p>}
+            <div className="row mt-2">
+              <button className="btn btn--primary" onClick={save} disabled={!!busy}>{busy === 'save' ? <IosSpinner size="sm" /> : 'Save'}</button>
+              <button className="btn btn--ghost" onClick={() => setEditing(null)} disabled={!!busy}>Cancel</button>
+            </div>
+          </div>
+        )}
+      </Modal>
+    </>
+  );
+}
+
 /* ---------- login ---------- */
 function AdminLogin({ onDone }) {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -645,6 +876,7 @@ const SIDEBAR = [
   ['products', 'Products', Package],
   ['services', 'Services', Wrench],
   ['service-fields', 'Service fields', Wrench],
+  ['mobile-apps', 'Mobile apps', Smartphone],
   ['downloads', 'Downloads', Download],
   ['orders', 'Orders', ShoppingBag],
   ['users', 'Customers', Users],
@@ -694,6 +926,7 @@ export default function Admin() {
         <main className="shell__main">
           <Routes>
             <Route index element={<AdminHome />} />
+            <Route path="mobile-apps" element={<MobileAppsAdmin />} />
             <Route path="orders" element={<Orders />} />
             <Route path="users" element={<UsersAdmin />} />
             <Route path="licenses" element={<LicensesAdmin />} />

@@ -100,6 +100,13 @@ export const downloadAPI = {
   forProduct: (slug) => api.get(`/downloads/${slug}`),
 };
 
+export const mobileAppAPI = {
+  list: () => api.get('/mobile-apps'),
+  get: (slug) => api.get(`/mobile-apps/${slug}`),
+  // Plain link target: the backend streams the APK with Content-Disposition: attachment.
+  downloadUrl: (slug) => `${API_BASE_URL}/mobile-apps/${slug}/download`,
+};
+
 export const serviceAPI = {
   getAll: () => api.get('/services'),
   list: (params) => api.get('/services', { params }),
@@ -237,6 +244,12 @@ export const adminAPI = {
   deleteApplication: (kind, id) => adminClient.delete(`/admin/applications/${kind}/${id}`),
   ticket: (ref) => adminClient.get(`/admin/tickets/${ref}`),
   ticketReply: (ref, body, status) => adminClient.post(`/admin/tickets/${ref}/reply`, { body, status }),
+  mobileApps: () => adminClient.get('/admin/mobile-apps'),
+  createMobileApp: (b) => adminClient.post('/admin/mobile-apps', b),
+  updateMobileApp: (id, b) => adminClient.patch(`/admin/mobile-apps/${id}`, b),
+  deleteMobileApp: (id) => adminClient.delete(`/admin/mobile-apps/${id}`),
+  uploadApk: (id, formData, onUploadProgress) => adminClient.post(`/admin/mobile-apps/${id}/apk`, formData,
+    { headers: { 'Content-Type': 'multipart/form-data' }, onUploadProgress }),
   seed: () => adminClient.post('/admin/seed'),
 };
 
