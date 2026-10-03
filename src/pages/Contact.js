@@ -44,7 +44,7 @@ export default function Contact() {
       <section className="section"><div className="container grid grid-2" style={{ alignItems: 'start' }}>
         {state === 'done' ? (
           <div className="card text-center">
-            <div className="empty__icon" style={{ background: '#E7F4EC', color: 'var(--ok)' }}><CheckCircle2 size={26} /></div>
+            <div className="empty__icon" style={{ background: 'var(--ok-bg)', color: 'var(--ok)' }}><CheckCircle2 size={26} /></div>
             <h3 className="mt-2">Message sent</h3>
             <p className="muted">Thanks — we'll be in touch shortly.</p>
           </div>

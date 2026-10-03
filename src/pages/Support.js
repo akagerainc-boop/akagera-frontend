@@ -49,7 +49,7 @@ export default function Support() {
             <FAQAccordion items={faqs} />
           ) : state === 'done' ? (
             <div className="card text-center">
-              <div className="empty__icon" style={{ background: '#E7F4EC', color: 'var(--ok)' }}><CheckCircle2 size={26} /></div>
+              <div className="empty__icon" style={{ background: 'var(--ok-bg)', color: 'var(--ok)' }}><CheckCircle2 size={26} /></div>
               <h3 className="mt-2">Ticket created</h3>
               <p className="muted">{msg}</p>
               {user && <Link to="/dashboard/support" className="btn btn--primary mt-2">Track it in your dashboard</Link>}

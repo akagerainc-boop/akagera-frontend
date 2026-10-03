@@ -34,7 +34,7 @@ export default function PaymentSuccess() {
         <div className="container text-center" style={{ maxWidth: 560 }}>
           {state === 'ok' ? (
             <>
-              <div className="empty__icon" style={{ width: 64, height: 64, background: '#E7F4EC', color: 'var(--ok)' }}><CheckCircle2 size={30} /></div>
+              <div className="empty__icon" style={{ width: 64, height: 64, background: 'var(--ok-bg)', color: 'var(--ok)' }}><CheckCircle2 size={30} /></div>
               <h1 className="mt-2">Payment confirmed</h1>
               <p className="lead mt-1">Your order is active. You'll find licenses, invoices, and downloads in your dashboard.</p>
               {detail?.license_key && <p className="mt-2"><span className="pill">License: {detail.license_key}</span></p>}
@@ -45,7 +45,7 @@ export default function PaymentSuccess() {
             </>
           ) : (
             <>
-              <div className="empty__icon" style={{ width: 64, height: 64, background: '#FBEAE8', color: 'var(--err)' }}><XCircle size={30} /></div>
+              <div className="empty__icon" style={{ width: 64, height: 64, background: 'var(--err-bg)', color: 'var(--err)' }}><XCircle size={30} /></div>
               <h1 className="mt-2">We couldn't confirm the payment</h1>
               <p className="lead mt-1">{detail || 'Please try again or contact support.'}</p>
               <div className="row mt-4" style={{ justifyContent: 'center' }}>

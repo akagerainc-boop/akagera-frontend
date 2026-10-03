@@ -42,7 +42,7 @@ export default function Carousel({ pageType = 'home', interval = 6000, images: p
   if (loading && quiet) return <div className="akg-carousel" />;
   if (loading) {
     return (
-      <div className="akg-carousel" style={{ background: 'var(--ink)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+      <div className="akg-carousel" style={{ background: 'var(--surface-dark)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
         <IosSpinner size="lg" color="#fff" />
       </div>
     );

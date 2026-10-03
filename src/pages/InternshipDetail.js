@@ -63,7 +63,7 @@ export default function InternshipDetail() {
         <aside className="card card--pad-lg" style={{ position: 'sticky', top: 88 }}>
           {state === 'done' ? (
             <div className="text-center">
-              <div className="empty__icon" style={{ background: '#E7F4EC', color: 'var(--ok)' }}><CheckCircle2 size={26} /></div>
+              <div className="empty__icon" style={{ background: 'var(--ok-bg)', color: 'var(--ok)' }}><CheckCircle2 size={26} /></div>
               <h3 className="mt-2">Application submitted</h3>
               <p className="muted">{msg}</p>
             </div>

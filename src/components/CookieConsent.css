@@ -245,3 +245,13 @@
     font-size: 0.75rem;
   }
 }
+
+/* dark theme */
+[data-theme="dark"] .cookie-consent-container { background: var(--paper); color: var(--ink); box-shadow: 0 -15px 60px rgba(0, 0, 0, .6); }
+[data-theme="dark"] .cookie-text h3 { color: var(--ink) !important; }
+[data-theme="dark"] .cookie-text p { color: var(--n-600); }
+[data-theme="dark"] .cookie-close-btn { color: var(--n-500); }
+[data-theme="dark"] .cookie-close-btn:hover { background: var(--n-100); color: var(--ink); }
+[data-theme="dark"] .cookie-btn-reject { background: var(--n-100); color: var(--ink); border-color: var(--n-300); }
+[data-theme="dark"] .cookie-btn-reject:hover { background: var(--n-200); border-color: var(--n-400); }
+[data-theme="dark"] .cookie-footer { border-top-color: var(--line); }

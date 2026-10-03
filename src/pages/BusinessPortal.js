@@ -109,7 +109,7 @@ export default function BusinessPortal() {
             <h3>Supported categories</h3>
             <div className="chip-row mt-2">{categories.map((c) => <span key={c} className="pill">{c}</span>)}</div>
           </div>
-          <div className="card section--dark" style={{ background: 'var(--ink)' }}>
+          <div className="card section--dark" style={{ background: 'var(--surface-dark)' }}>
             <div className="row" style={{ gap: 8 }}><ShieldCheck size={18} style={{ color: 'var(--brand)' }} /><h3 style={{ color: '#fff' }}>Token rules</h3></div>
             <ul className="stack mt-2" style={{ color: 'rgba(255,255,255,.8)', paddingLeft: 18 }}>
               <li>Exactly 10 characters, uppercase + digits</li>

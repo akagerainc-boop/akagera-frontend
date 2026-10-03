@@ -48,7 +48,7 @@ export default function Register() {
       <>
         <Seo title="Verify your email" />
         <section className="section"><div className="container" style={{ maxWidth: 420 }}>
-          <div className="empty__icon" style={{ background: '#E7F4EC', color: 'var(--ok)' }}><CheckCircle2 size={24} /></div>
+          <div className="empty__icon" style={{ background: 'var(--ok-bg)', color: 'var(--ok)' }}><CheckCircle2 size={24} /></div>
           <h1 className="mt-2">Account created</h1>
           <p className="muted mt-1">Verify your email to finish, or skip for now.</p>
           <form className="card mt-3" onSubmit={verify}>

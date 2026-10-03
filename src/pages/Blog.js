@@ -28,7 +28,7 @@ export default function Blog() {
         <SectionHead eyebrow="Insights" title="From the Akagera blog" />
         <div className="row" style={{ maxWidth: 420 }}>
           <div className="field" style={{ flex: 1, margin: 0 }}>
-            <div className="row" style={{ gap: 8, border: '1px solid var(--n-300)', borderRadius: 6, padding: '0 12px', background: '#fff' }}>
+            <div className="row" style={{ gap: 8, border: '1px solid var(--n-300)', borderRadius: 6, padding: '0 12px', background: 'var(--paper)' }}>
               <Search size={16} style={{ color: 'var(--n-500)' }} />
               <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search articles" style={{ border: 'none', padding: '10px 0' }} />
             </div>

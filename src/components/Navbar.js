@@ -4,6 +4,7 @@ import { Menu, X, ChevronDown, Search, LayoutDashboard, LogIn, Smartphone, Downl
 import { useSite } from './SiteContext';
 import { useAuth } from '../context/AuthContext';
 import SearchBar from './SearchBar';
+import ThemeToggle from './ThemeToggle';
 
 export default function Navbar() {
   const { nav, settings } = useSite();
@@ -58,6 +59,8 @@ export default function Navbar() {
             </div>
 
             <div className="nav__spacer" />
+
+            <ThemeToggle />
 
             <div className="nav__cta">
               <button className="nav__link" onClick={() => setSearch(true)} aria-label="Search"><Search size={18} /></button>

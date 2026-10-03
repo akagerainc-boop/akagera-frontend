@@ -30,7 +30,7 @@ export default function Documentation() {
         <Breadcrumbs items={[{ label: 'Resources' }, { label: 'Documentation', to: '/documentation' }, ...(page ? [{ label: page.title }] : [])]} />
         <div className="shell" style={{ minHeight: 'auto', border: '1px solid var(--line)', borderRadius: 'var(--r-lg)', overflow: 'hidden' }}>
           <nav className="shell__side" style={{ background: 'var(--bg-soft)', color: 'var(--n-700)' }}>
-            <div className="row" style={{ gap: 8, border: '1px solid var(--n-300)', borderRadius: 6, padding: '0 10px', background: '#fff', marginBottom: 12 }}>
+            <div className="row" style={{ gap: 8, border: '1px solid var(--n-300)', borderRadius: 6, padding: '0 10px', background: 'var(--paper)', marginBottom: 12 }}>
               <Search size={14} style={{ color: 'var(--n-500)' }} />
               <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search docs" style={{ border: 'none', padding: '8px 0', fontSize: '.85rem' }} />
             </div>
@@ -47,7 +47,7 @@ export default function Documentation() {
               <Link key={p.slug} to={`/documentation/${p.slug}`} style={{ display: 'block', padding: '7px 10px', fontSize: '.88rem' }}>{p.title}</Link>
             ))}
           </nav>
-          <div className="shell__main" style={{ background: '#fff' }}>
+          <div className="shell__main" style={{ background: 'var(--paper)' }}>
             {page === false && <EmptyState icon={<BookOpen size={22} />} title="Doc not found" />}
             {page && page !== false && (
               <article style={{ maxWidth: 720 }}>
